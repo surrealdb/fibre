@@ -169,7 +169,9 @@ func (c *Context) XML(code int, data interface{}) (err error) {
 	if !c.response.done {
 		c.response.Write([]byte(xml.Header))
 	}
-	xml.NewEncoder(c.response.ResponseWriter).Encode(data)
+	if data != nil {
+		xml.NewEncoder(c.response.ResponseWriter).Encode(data)
+	}
 	return
 }
 
@@ -177,7 +179,9 @@ func (c *Context) XML(code int, data interface{}) (err error) {
 func (c *Context) JSON(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.response.WriteHeader(code)
-	json.NewEncoder(c.response.ResponseWriter).Encode(data)
+	if data != nil {
+		json.NewEncoder(c.response.ResponseWriter).Encode(data)
+	}
 	return
 }
 
@@ -185,7 +189,9 @@ func (c *Context) JSON(code int, data interface{}) (err error) {
 func (c *Context) PACK(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/msgpack; charset=utf-8")
 	c.response.WriteHeader(code)
-	msgpack.NewEncoder(c.response.ResponseWriter).Encode(data)
+	if data != nil {
+		msgpack.NewEncoder(c.response.ResponseWriter).Encode(data)
+	}
 	return
 }
 
