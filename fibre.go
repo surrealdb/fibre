@@ -55,9 +55,6 @@ type (
 
 	// MiddlewareFunc ...
 	MiddlewareFunc func(HandlerFunc) HandlerFunc
-
-	// RemoteProcedureFunc ...
-	// RemoteProcedureFunc func(*Context, *RPCRequest) (interface{}, error)
 )
 
 const (
