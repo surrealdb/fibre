@@ -19,6 +19,8 @@ import (
 	"net"
 	"strings"
 
+	"io/ioutil"
+
 	"net/http"
 	"net/url"
 
@@ -101,6 +103,11 @@ func (c *Context) Type() string {
 	head := c.Request().Header().Get("Content-Type")
 	cont, _, _ := mime.ParseMediaType(head)
 	return cont
+}
+
+func (c *Context) Body() []byte {
+	body, _ := ioutil.ReadAll(c.Request().Body)
+	return body
 }
 
 // Path returns the registered path for the handler.
