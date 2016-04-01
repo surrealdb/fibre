@@ -150,8 +150,9 @@ func (f *Fibre) SetHTTPErrorHandler(h HTTPErrorHandler) {
 }
 
 // Use adds a middleware function
-func (f *Fibre) Use(m MiddlewareFunc) {
+func (f *Fibre) Use(m MiddlewareFunc) MiddlewareFunc {
 	f.middleware = append(f.middleware, m)
+	return m
 }
 
 // Head adds a HEAD route > handler to the router.
