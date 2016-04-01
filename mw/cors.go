@@ -48,7 +48,7 @@ func Cors(opts ...*CorsOpts) fibre.MiddlewareFunc {
 			// Set default values for opts.AllowedMethods
 			allowedMethods := opts[0].AllowedMethods
 			if len(allowedMethods) == 0 {
-				allowedMethods = []string{"GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"}
+				allowedMethods = []string{"GET", "PUT", "POST", "PATCH", "DELETE", "TRACE", "OPTIONS"}
 			}
 
 			// Set default values for opts.AllowedHeaders
