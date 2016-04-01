@@ -33,6 +33,8 @@ type (
 		wait         time.Duration
 		rtimeout     time.Duration
 		wtimeout     time.Duration
+		secure       bool
+		scheme       string
 		logger       *Logger
 		router       *Router
 		middleware   Middleware
@@ -284,10 +286,14 @@ func (f *Fibre) Run(opts HTTPOptions, files ...string) {
 	}
 
 	if len(files) != 2 {
+		f.secure = false
+		f.scheme = "http://"
 		err = s.ListenAndServe()
 	}
 
 	if len(files) == 2 {
+		f.secure = true
+		f.scheme = "https://"
 		err = s.ListenAndServeTLS(files[0], files[1])
 	}
 

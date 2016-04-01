@@ -39,7 +39,7 @@ func Logs() fibre.MiddlewareFunc {
 			now := c.Request().Start()
 
 			met := req.Method
-			url := req.URL.Path
+			url := req.URL().Path
 
 			if c.Socket() != nil {
 				met = "SOCK"
