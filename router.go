@@ -126,32 +126,35 @@ func (r *Route) rank() (rank int) {
 
 func (r *Route) test(path string) (url.Values, bool) {
 
+	var i int
 	var j int
 	var k string
 	var v string
 
 	param := make(url.Values)
 
-	for i := 0; i < len(r.Path); i++ {
+	for i < len(r.Path) {
 
 		switch {
 
 		case r.Path[i] == '*':
+			i++
 			v, j = consumeCatch(j, path)
 			param.Add("*", v)
 
 		case r.Path[i] == ':':
-			if k, i = consumeIdent(i, r.Path); i == 0 {
+			i++
+			if k, i = consumeIdent(i, r.Path); len(k) == 0 {
 				return nil, false
 			}
-			if v, j = consumeIdent(j, path); j == 0 {
+			if v, j = consumeIdent(j, path); len(v) == 0 {
 				return nil, false
 			}
 			param.Add(k, v)
 
 		default:
 			k, i = consumeChars(i, r.Path)
-			v, j = consumeCount(j, path, i+1)
+			v, j = consumeCount(j, path, len(k))
 			if i != j || k != v {
 				return nil, false
 			}
@@ -182,7 +185,7 @@ func consumeIdent(pos int, path string) (s string, i int) {
 			break
 		}
 	}
-	return path[pos:i], i - 1
+	return path[pos:i], i
 }
 
 func consumeChars(pos int, path string) (s string, i int) {
@@ -191,7 +194,7 @@ func consumeChars(pos int, path string) (s string, i int) {
 			break
 		}
 	}
-	return path[pos:i], i - 1
+	return path[pos:i], i
 }
 
 func consumeCount(pos int, path string, c int) (s string, i int) {
@@ -200,5 +203,5 @@ func consumeCount(pos int, path string, c int) (s string, i int) {
 	} else {
 		i = pos + c
 	}
-	return path[pos:i], i - 1
+	return path[pos:i], i
 }
