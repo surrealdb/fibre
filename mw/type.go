@@ -30,10 +30,12 @@ func Type(opts ...*TypeOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
+			// Set defaults
 			if len(opts) == 0 {
 				opts = append(opts, &TypeOpts{})
 			}
 
+			// No config has been set
 			if len(opts[0].AllowedContent) == 0 {
 				return h(c)
 			}

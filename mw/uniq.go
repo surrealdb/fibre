@@ -29,6 +29,7 @@ func Uniq(opts ...*UniqOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
+			// Set defaults
 			if len(opts) == 0 {
 				opts = append(opts, &UniqOpts{})
 			}
