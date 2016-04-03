@@ -201,6 +201,7 @@ func (c *Context) PACK(code int, data interface{}) (err error) {
 	return
 }
 
+// Send sends the relevant response depending on the request type.
 func (c *Context) Send(code int, data interface{}) (err error) {
 	switch c.Type() {
 	default:
@@ -214,6 +215,7 @@ func (c *Context) Send(code int, data interface{}) (err error) {
 	}
 }
 
+// Bind decodes the request body into the object.
 func (c *Context) Bind(i interface{}) (err error) {
 	switch c.Type() {
 	case "application/xml":
