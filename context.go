@@ -106,6 +106,7 @@ func (c *Context) Type() string {
 	return cont
 }
 
+// Body returns the full content body.
 func (c *Context) Body() []byte {
 	body, _ := ioutil.ReadAll(c.Request().Body)
 	return body
