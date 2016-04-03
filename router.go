@@ -155,7 +155,7 @@ func (r *Route) test(path string) (url.Values, bool) {
 		default:
 			k, i = consumeChars(i, r.Path)
 			v, j = consumeCount(j, path, len(k))
-			if i != j || k != v {
+			if k != v {
 				return nil, false
 			}
 
