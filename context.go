@@ -17,6 +17,7 @@ package fibre
 import (
 	"mime"
 	"net"
+	"path/filepath"
 	"strings"
 
 	"io/ioutil"
@@ -213,6 +214,12 @@ func (c *Context) Send(code int, data interface{}) (err error) {
 	case "application/msgpack":
 		return c.PACK(code, data)
 	}
+}
+
+// File sends a response with the content of a file.
+func (c *Context) File(path, name string) (err error) {
+	d, f := filepath.Split(path)
+	return c.fibre.serve(d, f, c)
 }
 
 // Bind decodes the request body into the object.
