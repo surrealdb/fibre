@@ -146,6 +146,12 @@ func (c *Context) Set(key string, val interface{}) {
 	c.store[key] = val
 }
 
+// Code sends a http response status code.
+func (c *Context) Code(code int) (err error) {
+	c.response.WriteHeader(code)
+	return
+}
+
 // Text sends a text response with status code.
 func (c *Context) Text(code int, data string) (err error) {
 	c.response.Header().Set("Content-Type", "text/plain; charset=utf-8")
