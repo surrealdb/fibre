@@ -204,11 +204,13 @@ func (f *Fibre) Any(p string, h HandlerFunc) {
 	}
 }
 
-// Rpc adds a route > handler to the router for all HTTP methods.
+// Rpc adds a route > handler to the router for a jsonrpc endpoint.
 func (f *Fibre) Rpc(p string, h interface{}) {
-	f.router.Add(POST, p, func(c *Context) error {
+	r := func(c *Context) error {
 		return rpc(c, h)
-	})
+	}
+	f.router.Add(GET, p, r)
+	f.router.Add(POST, p, r)
 }
 
 // Dir serves a folder.
