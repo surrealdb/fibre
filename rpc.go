@@ -19,17 +19,20 @@ import (
 	"strconv"
 )
 
+// RPCError represents a jsonrpc error
 type RPCError struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 
+// RPCRequest represents an incoming jsonrpc request
 type RPCRequest struct {
 	ID     string
 	Method string
 	Params []interface{}
 }
 
+// RPCResponse represents an outgoing jsonrpc response
 type RPCResponse struct {
 	ID     string      `json:"id" msgpack:"id"`
 	Error  *RPCError   `json:"error,omitempty" msgpack:"error,omitempty"`
