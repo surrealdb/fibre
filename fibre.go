@@ -15,6 +15,7 @@
 package fibre
 
 import (
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -277,6 +278,9 @@ func (f *Fibre) Run(opts HTTPOptions, files ...string) {
 	var err error
 	var s *graceful.Server
 
+	w := f.logger.Writer()
+	defer w.Close()
+
 	switch v := opts.(type) {
 	case string:
 		s = &graceful.Server{
@@ -286,6 +290,7 @@ func (f *Fibre) Run(opts HTTPOptions, files ...string) {
 				Handler:      f,
 				ReadTimeout:  f.rtimeout,
 				WriteTimeout: f.wtimeout,
+				ErrorLog:     log.New(w, "", 0),
 			},
 		}
 	case *http.Server:
