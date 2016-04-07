@@ -18,15 +18,12 @@ import (
 	"time"
 
 	"github.com/abcum/fibre"
-	"github.com/labstack/gommon/color"
 )
 
 // Logs defines middleware for logging requests and responses.
 func Logs() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) (err error) {
-
-			code := "-"
 
 			if err = h(c); err != nil {
 				c.Error(err)
@@ -45,18 +42,26 @@ func Logs() fibre.MiddlewareFunc {
 				met = "SOCK"
 			}
 
+			log := c.Fibre().Logger().WithFields(map[string]interface{}{
+				"prefix": c.Fibre().Name(),
+				"ip":     ip,
+				"url":    url,
+				"size":   res.Size(),
+				"status": num,
+				"method": met,
+				"speed":  time.Since(now),
+			})
+
 			switch {
 			case num >= 500:
-				code = color.Red(num)
+				log.Error("Completed request")
 			case num >= 400:
-				code = color.Yellow(num)
+				log.Warn("Completed request")
 			case num >= 300:
-				code = color.Cyan(num)
+				log.Info("Completed request")
 			case num >= 200:
-				code = color.Blue(num)
+				log.Info("Completed request")
 			}
-
-			c.Fibre().Logger().Infof("%s %s %s %s %s %d", color.Bold(code), ip, met, url, time.Since(now), res.Size())
 
 			return nil
 
