@@ -37,8 +37,8 @@ func NewLogger(f *Fibre) *Logger {
 
 }
 
-// Use sets the logrus instance.
-func (l *Logger) Use(i *logrus.Logger) {
+// SetLogger sets the logrus instance.
+func (l *Logger) SetLogger(i *logrus.Logger) {
 	l.Logger = i
 }
 
