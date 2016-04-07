@@ -29,6 +29,7 @@ type (
 	// Fibre ...
 	Fibre struct {
 		pool         sync.Pool
+		name         string
 		opts         interface{}
 		wait         time.Duration
 		rtimeout     time.Duration
@@ -83,6 +84,9 @@ func Server(opts interface{}) (f *Fibre) {
 	// Set the options
 	f.opts = opts
 
+	// Set the default name
+	f.name = "fibre"
+
 	// Setup a new logger
 	f.logger = NewLogger(f)
 
@@ -101,6 +105,11 @@ func Server(opts interface{}) (f *Fibre) {
 
 }
 
+// Name returns the instance name.
+func (f *Fibre) Name() string {
+	return f.name
+}
+
 // Opts returns the instance options.
 func (f *Fibre) Opts() interface{} {
 	return f.opts
@@ -114,6 +123,11 @@ func (f *Fibre) Logger() *Logger {
 // Router returns the router instance.
 func (f *Fibre) Router() *Router {
 	return f.router
+}
+
+// SetName sets the instance name.
+func (f *Fibre) SetName(name string) {
+	f.name = name
 }
 
 // SetLogLevel sets the logger log level.
