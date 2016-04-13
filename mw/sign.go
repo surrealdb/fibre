@@ -24,7 +24,7 @@ import (
 // SignOpts defines options for the Sign middleware.
 type SignOpts struct {
 	Key []byte
-	Fnc func(*fibre.Context, *jwt.Token) error
+	Fnc func(*fibre.Context, map[string]interface{}, map[string]interface{}) error
 }
 
 // Sign defines middleware for JWT authentication.
@@ -58,7 +58,7 @@ func Sign(opts ...*SignOpts) fibre.MiddlewareFunc {
 
 				if err == nil && token.Valid {
 					if opts[0].Fnc != nil {
-						if err := opts[0].Fnc(c, token); err != nil {
+						if err := opts[0].Fnc(c, token.Header, token.Claims); err != nil {
 							return fibre.NewHTTPError(401)
 						}
 					}
