@@ -243,7 +243,7 @@ func (f *Fibre) File(path, file string) {
 	})
 }
 
-func (f *Fibre) serve(dir, file string, c *Context) (err error) {
+func (f *Fibre) Serve(dir, file string, c *Context) (err error) {
 
 	var fo http.Dir
 	var fi http.File
