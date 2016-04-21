@@ -16,7 +16,7 @@ package mw
 
 import (
 	"github.com/abcum/fibre"
-	"github.com/abcum/surreal/util/uuid"
+	"github.com/satori/go.uuid"
 )
 
 // UniqOpts defines options for the Uniq middleware.
