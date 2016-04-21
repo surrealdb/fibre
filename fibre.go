@@ -231,7 +231,7 @@ func (f *Fibre) Rpc(p string, h interface{}) {
 // Dir serves a folder.
 func (f *Fibre) Dir(path, dir string) {
 	f.Get(path+"*", func(c *Context) error {
-		return f.serve(dir, c.Param("*"), c)
+		return f.Serve(dir, c.Param("*"), c)
 	})
 }
 
@@ -239,7 +239,7 @@ func (f *Fibre) Dir(path, dir string) {
 func (f *Fibre) File(path, file string) {
 	f.Get(path, func(c *Context) error {
 		dir, file := filepath.Split(file)
-		return f.serve(dir, file, c)
+		return f.Serve(dir, file, c)
 	})
 }
 
