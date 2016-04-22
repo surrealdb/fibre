@@ -1,0 +1,48 @@
+hash: 0229823e43b87588d198d8a4a12a6a69cac623d7820ecfd68b0956243ef85e67
+updated: 2016-04-22T12:11:54.01514961+01:00
+imports:
+- name: github.com/dgrijalva/jwt-go
+  version: a2c85815a77d0f951e33ba4db5ae93629a1530af
+- name: github.com/golang/protobuf
+  version: bf531ff1a004f24ee53329dfd5ce0b41bfdc17df
+  subpackages:
+  - proto
+- name: github.com/gorilla/websocket
+  version: 6b3d49710be714c8355967d41b95295d4928cf54
+- name: github.com/satori/go.uuid
+  version: f9ab0dce87d815821e221626b772e3475a0d2749
+- name: github.com/Sirupsen/logrus
+  version: 081307d9bc1364753142d5962fc1d795c742baaf
+- name: github.com/yvasiyarov/go-metrics
+  version: c25f46c4b94079672242ec48a545e7ca9ebe3aec
+- name: github.com/yvasiyarov/gorelic
+  version: 899fe5e1be7138f2440c28e77532f0635c1249f1
+- name: github.com/yvasiyarov/newrelic_platform_go
+  version: db03d6dfd965ebc22dbfd910567c641b326ff055
+- name: golang.org/x/net
+  version: 815d315ead425c4365077d904a2331ee9e179820
+  subpackages:
+  - netutil
+  - context
+- name: golang.org/x/sys
+  version: f64b50fbea64174967a8882830d621a18ee1548e
+  subpackages:
+  - unix
+- name: google.golang.org/appengine
+  version: e234e71924d4aa52444bc76f2f831f13fa1eca60
+  subpackages:
+  - datastore
+  - internal
+  - internal/datastore
+  - internal/app_identity
+  - internal/modules
+  - internal/base
+  - internal/log
+  - internal/remote_api
+- name: gopkg.in/tylerb/graceful.v1
+  version: 9a3d4236b03bb5d26f7951134d248f9d5510d599
+- name: gopkg.in/vmihailenco/msgpack.v2
+  version: 2f9488727bacc319c0556432905ea6ec7a1a8d6d
+  subpackages:
+  - codes
+devImports: []
