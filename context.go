@@ -154,6 +154,14 @@ func (c *Context) Code(code int) (err error) {
 	return
 }
 
+// Data sends a response with status code and mime type.
+func (c *Context) Data(code int, data, mime string) (err error) {
+	c.response.Header().Set("Content-Type", mime)
+	c.response.WriteHeader(code)
+	c.response.Write([]byte(data))
+	return
+}
+
 // Text sends a text response with status code.
 func (c *Context) Text(code int, data string) (err error) {
 	c.response.Header().Set("Content-Type", "text/plain; charset=utf-8")
