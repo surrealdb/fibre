@@ -18,10 +18,8 @@ import (
 	"mime"
 	"net"
 	"os"
-	// "path/filepath"
 	"strings"
 
-	// "io"
 	"io/ioutil"
 
 	"net/http"
