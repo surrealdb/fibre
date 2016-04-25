@@ -17,9 +17,11 @@ package fibre
 import (
 	"mime"
 	"net"
-	"path/filepath"
+	"os"
+	// "path/filepath"
 	"strings"
 
+	// "io"
 	"io/ioutil"
 
 	"net/http"
@@ -218,9 +220,31 @@ func (c *Context) Send(code int, data interface{}) (err error) {
 }
 
 // File sends a response with the content of a file.
-func (c *Context) File(path, name string) (err error) {
-	d, f := filepath.Split(path)
-	return c.fibre.Serve(d, f, c)
+func (c *Context) File(path string) (err error) {
+
+	info, err := os.Stat(path)
+	if err != nil {
+		return NewHTTPError(404)
+	}
+
+	if info.IsDir() == false {
+		file, err := os.Open(path)
+		if err != nil {
+			return NewHTTPError(404)
+		}
+		http.ServeContent(c.Response().ResponseWriter, c.Request().Request, info.Name(), info.ModTime(), file)
+	}
+
+	if info.IsDir() == true {
+		file, err := os.Open(path + index)
+		if err != nil {
+			return NewHTTPError(404)
+		}
+		http.ServeContent(c.Response().ResponseWriter, c.Request().Request, info.Name(), info.ModTime(), file)
+	}
+
+	return nil
+
 }
 
 // Bind decodes the request body into the object.

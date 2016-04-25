@@ -17,9 +17,6 @@ package fibre
 import (
 	"log"
 	"net/http"
-	"os"
-	"path"
-	"path/filepath"
 	"sync"
 	"time"
 
@@ -229,47 +226,17 @@ func (f *Fibre) Rpc(p string, h interface{}) {
 }
 
 // Dir serves a folder.
-func (f *Fibre) Dir(path, dir string) {
-	f.Get(path+"*", func(c *Context) error {
-		return f.Serve(dir, c.Param("*"), c)
+func (f *Fibre) Dir(p, dir string) {
+	f.Get(p+"*", func(c *Context) error {
+		return c.File(dir + c.Param("*"))
 	})
 }
 
 // File serves a file.
-func (f *Fibre) File(path, file string) {
-	f.Get(path, func(c *Context) error {
-		dir, file := filepath.Split(file)
-		return f.Serve(dir, file, c)
+func (f *Fibre) File(p, file string) {
+	f.Get(p, func(c *Context) error {
+		return c.File(file)
 	})
-}
-
-func (f *Fibre) Serve(dir, file string, c *Context) (err error) {
-
-	var fo http.Dir
-	var fi http.File
-	var fs os.FileInfo
-
-	fo = http.Dir(dir)
-
-	if fi, err = fo.Open(file); err != nil {
-		return NewHTTPError(404)
-	}
-	defer fi.Close()
-
-	fs, _ = fi.Stat()
-
-	if fs.IsDir() {
-
-		// Index file
-		file = path.Join(file, index)
-		if fi, err = fo.Open(file); err != nil {
-			return NewHTTPError(http.StatusForbidden)
-		}
-		fs, _ = fi.Stat() // Index file stat
-	}
-
-	http.ServeContent(c.Response().ResponseWriter, c.Request().Request, fs.Name(), fs.ModTime(), fi)
-	return
 }
 
 // Run runs the server and handles http requests.
