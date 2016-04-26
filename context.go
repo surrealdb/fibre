@@ -158,11 +158,11 @@ func (c *Context) Code(code int) (err error) {
 func (c *Context) Data(code int, data interface{}, mime string) (err error) {
 	c.response.Header().Set("Content-Type", mime)
 	c.response.WriteHeader(code)
-	switch data.(type) {
+	switch conv := data.(type) {
 	case []byte:
-		c.response.Write(data)
+		c.response.Write(conv)
 	case string:
-		c.response.Write([]byte(data))
+		c.response.Write([]byte(conv))
 	}
 	return
 }
@@ -171,11 +171,11 @@ func (c *Context) Data(code int, data interface{}, mime string) (err error) {
 func (c *Context) Text(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	c.response.WriteHeader(code)
-	switch data.(type) {
+	switch conv := data.(type) {
 	case []byte:
-		c.response.Write(data)
+		c.response.Write(conv)
 	case string:
-		c.response.Write([]byte(data))
+		c.response.Write([]byte(conv))
 	}
 	return
 }
@@ -184,11 +184,11 @@ func (c *Context) Text(code int, data interface{}) (err error) {
 func (c *Context) HTML(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "text/html; charset=utf-8")
 	c.response.WriteHeader(code)
-	switch data.(type) {
+	switch conv := data.(type) {
 	case []byte:
-		c.response.Write(data)
+		c.response.Write(conv)
 	case string:
-		c.response.Write([]byte(data))
+		c.response.Write([]byte(conv))
 	}
 	return
 }
