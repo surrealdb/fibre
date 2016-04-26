@@ -155,26 +155,41 @@ func (c *Context) Code(code int) (err error) {
 }
 
 // Data sends a response with status code and mime type.
-func (c *Context) Data(code int, data, mime string) (err error) {
+func (c *Context) Data(code int, data interface{}, mime string) (err error) {
 	c.response.Header().Set("Content-Type", mime)
 	c.response.WriteHeader(code)
-	c.response.Write([]byte(data))
+	switch data.(type) {
+	case []byte:
+		c.response.Write(data)
+	case string:
+		c.response.Write([]byte(data))
+	}
 	return
 }
 
 // Text sends a text response with status code.
-func (c *Context) Text(code int, data string) (err error) {
+func (c *Context) Text(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	c.response.WriteHeader(code)
-	c.response.Write([]byte(data))
+	switch data.(type) {
+	case []byte:
+		c.response.Write(data)
+	case string:
+		c.response.Write([]byte(data))
+	}
 	return
 }
 
 // HTML sends an html response with status code.
-func (c *Context) HTML(code int, data string) (err error) {
+func (c *Context) HTML(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "text/html; charset=utf-8")
 	c.response.WriteHeader(code)
-	c.response.Write([]byte(data))
+	switch data.(type) {
+	case []byte:
+		c.response.Write(data)
+	case string:
+		c.response.Write([]byte(data))
+	}
 	return
 }
 
