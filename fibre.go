@@ -239,56 +239,6 @@ func (f *Fibre) File(p, file string) {
 	})
 }
 
-// Run runs the server and handles http requests.
-func (f *Fibre) Run(opts HTTPOptions, files ...string) {
-
-	var err error
-	var s *graceful.Server
-
-	w := f.logger.Writer()
-	defer w.Close()
-
-	switch v := opts.(type) {
-	case string:
-		s = &graceful.Server{
-			Timeout: f.wait,
-			Server: &http.Server{
-				Addr:         v,
-				Handler:      f,
-				ReadTimeout:  f.rtimeout,
-				WriteTimeout: f.wtimeout,
-				ErrorLog:     log.New(w, "", 0),
-			},
-		}
-	case *http.Server:
-		s = &graceful.Server{
-			Timeout: f.wait,
-			Server:  v,
-		}
-		s.Server.Handler = f
-	case *graceful.Server:
-		s = v
-		s.Server.Handler = f
-	}
-
-	if len(files) != 2 {
-		f.secure = false
-		f.scheme = "http://"
-		err = s.ListenAndServe()
-	}
-
-	if len(files) == 2 {
-		f.secure = true
-		f.scheme = "https://"
-		err = s.ListenAndServeTLS(files[0], files[1])
-	}
-
-	if err != nil {
-		f.Logger().Fatal(err)
-	}
-
-}
-
 // ServeHTTP implements `http.Handler` interface, which serves HTTP requests.
 func (f *Fibre) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
