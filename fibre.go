@@ -15,7 +15,6 @@
 package fibre
 
 import (
-	"log"
 	"net/http"
 	"sync"
 	"time"
