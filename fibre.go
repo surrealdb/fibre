@@ -19,8 +19,6 @@ import (
 	"net/http"
 	"sync"
 	"time"
-
-	"gopkg.in/tylerb/graceful.v1"
 )
 
 type (
