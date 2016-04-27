@@ -38,7 +38,7 @@ func (r *Request) Size() int64 {
 
 // URL returns the parsed url of the request.
 func (r *Request) URL() *URL {
-	return NewURL(r.fibre.scheme + r.Host + r.RequestURI)
+	return NewURL(r.TLS != nil, r.Host+r.RequestURI)
 }
 
 // Start returns the current size, in bytes, of the request.

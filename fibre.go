@@ -29,8 +29,6 @@ type (
 		wait         time.Duration
 		rtimeout     time.Duration
 		wtimeout     time.Duration
-		secure       bool
-		scheme       string
 		logger       *Logger
 		router       *Router
 		middleware   Middleware

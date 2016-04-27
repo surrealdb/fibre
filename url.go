@@ -30,29 +30,37 @@ type URL struct {
 	Fragment string
 }
 
-func NewURL(uri string) *URL {
+func NewURL(tls bool, uri string) *URL {
 
 	var user string
 	var pass string
 	var host string
 
-	parsed, _ := url.Parse(uri)
+	var part *url.URL
 
-	if parsed.User != nil {
-		user = parsed.User.Username()
-		pass, _ = parsed.User.Password()
+	if tls == true {
+		part, _ = url.Parse("https://" + uri)
 	}
 
-	host = strings.SplitN(parsed.Host, ":", 2)[0]
+	if tls == false {
+		part, _ = url.Parse("http://" + uri)
+	}
+
+	if part.User != nil {
+		user = part.User.Username()
+		pass, _ = part.User.Password()
+	}
+
+	host = strings.SplitN(part.Host, ":", 2)[0]
 
 	return &URL{
-		Scheme:   parsed.Scheme,
+		Scheme:   part.Scheme,
 		User:     user,
 		Pass:     pass,
 		Host:     host,
-		Path:     parsed.Path,
-		Query:    parsed.RawQuery,
-		Fragment: parsed.Fragment,
+		Path:     part.Path,
+		Query:    part.RawQuery,
+		Fragment: part.Fragment,
 	}
 
 }
