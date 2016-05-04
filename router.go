@@ -104,7 +104,7 @@ func (r *Route) rank() (rank int) {
 	for _, c := range r.Path {
 		switch c {
 		default:
-			rank += 1
+			rank++
 		case ':':
 			rank += 100
 		case '*':

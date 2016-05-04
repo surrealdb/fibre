@@ -21,7 +21,7 @@ import (
 )
 
 type (
-	// Fibre ...
+	// Fibre represents an HTTP server
 	Fibre struct {
 		pool         sync.Pool
 		name         string
@@ -35,31 +35,40 @@ type (
 		errorHandler HTTPErrorHandler
 	}
 
-	// HTTPOptions is
+	// HTTPOptions represents server config options
 	HTTPOptions interface{}
 
 	// HTTPErrorHandler is a centralized HTTP error handler.
 	HTTPErrorHandler func(error, *Context)
 
-	// Middleware ...
+	// Middleware stores loaded middleware
 	Middleware []MiddlewareFunc
 
-	// HandlerFunc ...
+	// HandlerFunc represents a request handler
 	HandlerFunc func(*Context) error
 
-	// MiddlewareFunc ...
+	// MiddlewareFunc represents a request middleware
 	MiddlewareFunc func(HandlerFunc) HandlerFunc
 )
 
 const (
-	HEAD    = "HEAD"
-	GET     = "GET"
-	PUT     = "PUT"
-	POST    = "POST"
-	PATCH   = "PATCH"
-	TRACE   = "TRACE"
-	DELETE  = "DELETE"
+	// HEAD ...
+	HEAD = "HEAD"
+	// GET ...
+	GET = "GET"
+	// PUT ...
+	PUT = "PUT"
+	// POST ...
+	POST = "POST"
+	// PATCH ...
+	PATCH = "PATCH"
+	// TRACE ...
+	TRACE = "TRACE"
+	// DELETE ...
+	DELETE = "DELETE"
+	// OPTIONS ...
 	OPTIONS = "OPTIONS"
+	// CONNECT ...
 	CONNECT = "CONNECT"
 )
 

@@ -30,6 +30,7 @@ type URL struct {
 	Fragment string
 }
 
+// NewURL parses and returns a new URL object
 func NewURL(tls bool, uri string) *URL {
 
 	var user string

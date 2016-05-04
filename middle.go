@@ -29,6 +29,7 @@ func check(what string, checks ...string) bool {
 	return false
 }
 
+// Host checks if the url host matches in the request. If the host matches the middleware will be invoked.
 func (m MiddlewareFunc) Host(test ...string) MiddlewareFunc {
 	return func(h HandlerFunc) HandlerFunc {
 		return func(c *Context) error {
@@ -40,6 +41,7 @@ func (m MiddlewareFunc) Host(test ...string) MiddlewareFunc {
 	}
 }
 
+// Path checks if the url path matches in the request. If the path matches the middleware will be invoked.
 func (m MiddlewareFunc) Path(test ...string) MiddlewareFunc {
 	return func(h HandlerFunc) HandlerFunc {
 		return func(c *Context) error {
@@ -51,6 +53,7 @@ func (m MiddlewareFunc) Path(test ...string) MiddlewareFunc {
 	}
 }
 
+// Scheme checks if the url scheme matches in the request. If the scheme matches the middleware will be invoked.
 func (m MiddlewareFunc) Scheme(test ...string) MiddlewareFunc {
 	return func(h HandlerFunc) HandlerFunc {
 		return func(c *Context) error {
@@ -62,6 +65,7 @@ func (m MiddlewareFunc) Scheme(test ...string) MiddlewareFunc {
 	}
 }
 
+// UserAgent checks if the user agent matches in the request. If the user agent matches the middleware will be invoked.
 func (m MiddlewareFunc) UserAgent(test ...string) MiddlewareFunc {
 	return func(h HandlerFunc) HandlerFunc {
 		return func(c *Context) error {

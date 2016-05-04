@@ -81,6 +81,7 @@ func (s *Socket) PACK(data interface{}) (err error) {
 	return
 }
 
+// Send sends the relevant response depending on the request type.
 func (s *Socket) Send(data interface{}) (err error) {
 	switch s.context.Type() {
 	default:
