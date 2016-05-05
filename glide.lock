@@ -1,18 +1,18 @@
-hash: 0229823e43b87588d198d8a4a12a6a69cac623d7820ecfd68b0956243ef85e67
-updated: 2016-04-22T12:11:54.01514961+01:00
+hash: 2b03dcb97bc56f15a5741373e138cd5c0ca3b7fe376c6e290f04a5add8081bd0
+updated: 2016-05-05T12:54:32.585191636+01:00
 imports:
+- name: github.com/abcum/logrus
+  version: 119b6994c03cc9597e8c1873a47d715e34b5ed9a
 - name: github.com/dgrijalva/jwt-go
-  version: a2c85815a77d0f951e33ba4db5ae93629a1530af
+  version: 40bd0f3b4891a9d7f121bfb7b8e8b0525625e262
 - name: github.com/golang/protobuf
-  version: bf531ff1a004f24ee53329dfd5ce0b41bfdc17df
+  version: 7cc19b78d562895b13596ddce7aafb59dd789318
   subpackages:
   - proto
 - name: github.com/gorilla/websocket
-  version: 6b3d49710be714c8355967d41b95295d4928cf54
+  version: 1f512fc3f05332ba7117626cdfb4e07474e58e60
 - name: github.com/satori/go.uuid
   version: f9ab0dce87d815821e221626b772e3475a0d2749
-- name: github.com/Sirupsen/logrus
-  version: 081307d9bc1364753142d5962fc1d795c742baaf
 - name: github.com/yvasiyarov/go-metrics
   version: c25f46c4b94079672242ec48a545e7ca9ebe3aec
 - name: github.com/yvasiyarov/gorelic
@@ -20,12 +20,12 @@ imports:
 - name: github.com/yvasiyarov/newrelic_platform_go
   version: db03d6dfd965ebc22dbfd910567c641b326ff055
 - name: golang.org/x/net
-  version: 815d315ead425c4365077d904a2331ee9e179820
+  version: 35ec611a141ee705590b9eb64d673f9e6dfeb1ac
   subpackages:
   - netutil
   - context
 - name: golang.org/x/sys
-  version: f64b50fbea64174967a8882830d621a18ee1548e
+  version: b776ec39b3e54652e09028aaaaac9757f4f8211a
   subpackages:
   - unix
 - name: google.golang.org/appengine
@@ -42,7 +42,7 @@ imports:
 - name: gopkg.in/tylerb/graceful.v1
   version: 9a3d4236b03bb5d26f7951134d248f9d5510d599
 - name: gopkg.in/vmihailenco/msgpack.v2
-  version: 2f9488727bacc319c0556432905ea6ec7a1a8d6d
+  version: cde6785b9011a544c513d7c12bfbfebc9e383b08
   subpackages:
   - codes
 devImports: []
