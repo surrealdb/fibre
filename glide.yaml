@@ -1,6 +1,6 @@
 package: github.com/abcum/fibre
 import:
-- package: github.com/Sirupsen/logrus
+- package: github.com/abcum/logrus
 - package: github.com/dgrijalva/jwt-go
 - package: github.com/gorilla/websocket
 - package: github.com/satori/go.uuid
