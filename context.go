@@ -80,8 +80,9 @@ func (c *Context) Upgrade() (err error) {
 		if sck, err = wsupgrader.Upgrade(res, req, nil); err == nil {
 			c.socket = NewSocket(sck, c, c.Fibre())
 		}
+		return err
 	}
-	return
+	return NewHTTPError(426, "Upgrade required")
 }
 
 // Socket returns the websocket connection.
