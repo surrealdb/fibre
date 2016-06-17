@@ -58,7 +58,7 @@ func Sign(opts ...*SignOpts) fibre.MiddlewareFunc {
 
 				if err == nil && token.Valid {
 					if opts[0].Fnc != nil {
-						if err := opts[0].Fnc(c, token.Header, token.Claims); err != nil {
+						if err := opts[0].Fnc(c, token.Header, token.Claims.(jwt.MapClaims)); err != nil {
 							return fibre.NewHTTPError(401)
 						}
 					}
