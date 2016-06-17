@@ -39,58 +39,59 @@ func (s *Socket) Read() (int, []byte, error) {
 	return s.Conn.ReadMessage()
 }
 
-// Text sends a text response with status code.
-func (s *Socket) Text(data string) (err error) {
-	s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
-	return
+func (s *Socket) ReadXML(v interface{}) (err error) {
+	_, r, err := s.NextReader()
+	if err != nil {
+		return err
+	}
+	return xml.NewDecoder(r).Decode(v)
 }
 
-// HTML sends an html response with status code.
-func (s *Socket) HTML(data string) (err error) {
+func (s *Socket) ReadJSON(v interface{}) (err error) {
+	_, r, err := s.NextReader()
+	if err != nil {
+		return err
+	}
+	return json.NewDecoder(r).Decode(v)
+}
+
+func (s *Socket) ReadPACK(v interface{}) (err error) {
+	_, r, err := s.NextReader()
+	if err != nil {
+		return err
+	}
+	return msgpack.NewDecoder(r).Decode(v)
+}
+
+// Text sends a text response with status code.
+func (s *Socket) SendText(data string) (err error) {
 	s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
 	return
 }
 
 // XML sends a xml response with status code.
-func (s *Socket) XML(data interface{}) (err error) {
-	done, err := xml.Marshal(data)
-	if err != nil {
-		return err
+func (s *Socket) SendXML(data interface{}) (err error) {
+	w, err := s.NextWriter(websocket.TextMessage)
+	if data != nil {
+		xml.NewEncoder(w).Encode(data)
 	}
-	s.Conn.WriteMessage(websocket.TextMessage, done)
-	return
+	return w.Close()
 }
 
 // JSON sends a json response with status code.
-func (s *Socket) JSON(data interface{}) (err error) {
-	done, err := json.Marshal(data)
-	if err != nil {
-		return err
+func (s *Socket) SendJSON(data interface{}) (err error) {
+	w, err := s.NextWriter(websocket.TextMessage)
+	if data != nil {
+		json.NewEncoder(w).Encode(data)
 	}
-	s.Conn.WriteMessage(websocket.TextMessage, done)
-	return
+	return w.Close()
 }
 
 // PACK sends a msgpack response with status code.
-func (s *Socket) PACK(data interface{}) (err error) {
-	done, err := msgpack.Marshal(data)
-	if err != nil {
-		return err
+func (s *Socket) SendPACK(data interface{}) (err error) {
+	w, err := s.NextWriter(websocket.BinaryMessage)
+	if data != nil {
+		msgpack.NewEncoder(w).Encode(data)
 	}
-	s.Conn.WriteMessage(websocket.BinaryMessage, done)
-	return
-}
-
-// Send sends the relevant response depending on the request type.
-func (s *Socket) Send(data interface{}) (err error) {
-	switch s.context.Type() {
-	default:
-		return s.JSON(data)
-	case "application/xml":
-		return s.XML(data)
-	case "application/json":
-		return s.JSON(data)
-	case "application/msgpack":
-		return s.PACK(data)
-	}
+	return w.Close()
 }
