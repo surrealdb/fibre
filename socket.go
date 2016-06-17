@@ -39,6 +39,7 @@ func (s *Socket) Read() (int, []byte, error) {
 	return s.Conn.ReadMessage()
 }
 
+// ReadXML reads a xml message from the socket.
 func (s *Socket) ReadXML(v interface{}) (err error) {
 	_, r, err := s.NextReader()
 	if err != nil {
@@ -47,6 +48,7 @@ func (s *Socket) ReadXML(v interface{}) (err error) {
 	return xml.NewDecoder(r).Decode(v)
 }
 
+// ReadJSON reads a json message from the socket.
 func (s *Socket) ReadJSON(v interface{}) (err error) {
 	_, r, err := s.NextReader()
 	if err != nil {
@@ -55,6 +57,7 @@ func (s *Socket) ReadJSON(v interface{}) (err error) {
 	return json.NewDecoder(r).Decode(v)
 }
 
+// ReadPACK reads a msgpack message from the socket.
 func (s *Socket) ReadPACK(v interface{}) (err error) {
 	_, r, err := s.NextReader()
 	if err != nil {
