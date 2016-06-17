@@ -1,35 +1,35 @@
 hash: 2b03dcb97bc56f15a5741373e138cd5c0ca3b7fe376c6e290f04a5add8081bd0
-updated: 2016-05-05T12:54:32.585191636+01:00
+updated: 2016-06-17T11:25:19.062161077+01:00
 imports:
 - name: github.com/abcum/logrus
   version: 119b6994c03cc9597e8c1873a47d715e34b5ed9a
 - name: github.com/dgrijalva/jwt-go
-  version: 40bd0f3b4891a9d7f121bfb7b8e8b0525625e262
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/golang/protobuf
-  version: 7cc19b78d562895b13596ddce7aafb59dd789318
+  version: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
   subpackages:
   - proto
 - name: github.com/gorilla/websocket
-  version: 1f512fc3f05332ba7117626cdfb4e07474e58e60
+  version: a68708917c6a4f06314ab4e52493cc61359c9d42
 - name: github.com/satori/go.uuid
-  version: f9ab0dce87d815821e221626b772e3475a0d2749
+  version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/yvasiyarov/go-metrics
   version: c25f46c4b94079672242ec48a545e7ca9ebe3aec
 - name: github.com/yvasiyarov/gorelic
-  version: 899fe5e1be7138f2440c28e77532f0635c1249f1
+  version: ae09aa139a2b7f638e2412baceaceebd41eff115
 - name: github.com/yvasiyarov/newrelic_platform_go
-  version: db03d6dfd965ebc22dbfd910567c641b326ff055
+  version: 9c099fbc30e90de5bb5c5f94aa5fd08f2daeaacd
 - name: golang.org/x/net
-  version: 35ec611a141ee705590b9eb64d673f9e6dfeb1ac
+  version: d7bf3545bb0dacf009c535b3d3fbf53ac0a339ab
   subpackages:
   - netutil
   - context
 - name: golang.org/x/sys
-  version: b776ec39b3e54652e09028aaaaac9757f4f8211a
+  version: 62bee037599929a6e9146f29d10dd5208c43507d
   subpackages:
   - unix
 - name: google.golang.org/appengine
-  version: e234e71924d4aa52444bc76f2f831f13fa1eca60
+  version: 7f59a8c76b8594d06044bfe0bcbe475cb2020482
   subpackages:
   - datastore
   - internal
@@ -37,12 +37,11 @@ imports:
   - internal/app_identity
   - internal/modules
   - internal/base
-  - internal/log
   - internal/remote_api
 - name: gopkg.in/tylerb/graceful.v1
-  version: 9a3d4236b03bb5d26f7951134d248f9d5510d599
+  version: 84177357ab104029f9237abcb52339a7b80760ef
 - name: gopkg.in/vmihailenco/msgpack.v2
-  version: cde6785b9011a544c513d7c12bfbfebc9e383b08
+  version: 6915de5f21af6f5bcd2517da00d99c5131bb1da7
   subpackages:
   - codes
 devImports: []
