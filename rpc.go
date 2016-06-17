@@ -21,15 +21,15 @@ import (
 
 // RPCError represents a jsonrpc error
 type RPCError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	Code    int    `json:"code" msgpack:"code"`
+	Message string `json:"message" msgpack:"message"`
 }
 
 // RPCRequest represents an incoming jsonrpc request
 type RPCRequest struct {
-	ID     string
-	Method string
-	Params []interface{}
+	ID     string        `json:"id" msgpack:"id"`
+	Method string        `json:"method" msgpack:"method"`
+	Params []interface{} `json:"params" msgpack:"params"`
 }
 
 // RPCResponse represents an outgoing jsonrpc response
@@ -39,64 +39,92 @@ type RPCResponse struct {
 	Result interface{} `json:"result,omitempty" msgpack:"result,omitempty"`
 }
 
-func rpc(c *Context, i interface{}) error {
+// Rpc adds a route > handler to the router for a jsonrpc endpoint.
+func (f *Fibre) Rpc(p string, i interface{}) {
 
-	req := &RPCRequest{}
+	f.router.Add(POST, p, func(c *Context) (err error) {
+		req := &RPCRequest{}
+		c.Bind(req)
+		res := rpc(req, c, i)
+		return c.Send(200, res)
+	})
+
+	f.router.Add(GET, p, func(c *Context) (err error) {
+
+		if err = c.Upgrade(); err != nil {
+			return
+		}
+
+		for {
+			req := &RPCRequest{}
+			c.Socket().ReadJSON(req)
+			res := rpc(req, c, i)
+			c.Socket().SendJSON(res)
+		}
+
+		return
+
+	})
+
+}
+
+func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
+
 	ins := reflect.ValueOf(i)
 
-	if err := c.Bind(req); err != nil {
-		return c.JSON(200, &RPCResponse{
+	if req == nil {
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32700,
 				Message: "Parse error",
 			},
-		})
+		}
 	}
 
 	if req.Method == "" {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32600,
 				Message: "Invalid Request",
 			},
-		})
+		}
 	}
 
 	_, ok := ins.Type().MethodByName(req.Method)
 	if !ok {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32601,
 				Message: "Method not found",
 			},
-		})
+		}
 	}
 
 	fnc := ins.MethodByName(req.Method)
 
 	cnti := fnc.Type().NumIn()
 	if cnti != len(req.Params)+1 {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32602,
 				Message: "Invalid params",
 			},
-		})
+		}
 	}
 
 	cnto := fnc.Type().NumOut()
 	if cnto != 2 {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32602,
 				Message: "Invalid params",
 			},
-		})
+		}
 	}
 
 	var args []reflect.Value
@@ -106,13 +134,13 @@ func rpc(c *Context, i interface{}) error {
 	for k, v := range req.Params {
 		val, err := arg(fnc, k, v)
 		if err != nil {
-			return c.JSON(200, &RPCResponse{
+			return &RPCResponse{
 				ID: req.ID,
 				Error: &RPCError{
 					Code:    -32602,
 					Message: "Invalid params",
 				},
-			})
+			}
 		}
 		args = append(args, val)
 	}
@@ -122,20 +150,20 @@ func rpc(c *Context, i interface{}) error {
 	err := val[1].Interface()
 
 	if err == nil {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID:     req.ID,
 			Result: res,
-		})
+		}
 	}
 
 	if err != nil {
-		return c.JSON(200, &RPCResponse{
+		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32000,
 				Message: err.(error).Error(),
 			},
-		})
+		}
 	}
 
 	return nil
