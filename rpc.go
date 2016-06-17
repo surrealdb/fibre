@@ -63,14 +63,12 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 				if _, ok := err.(*websocket.CloseError); ok {
 					break
 				}
-				continue
 			}
 			res := rpc(req, c, i)
 			if err = c.Socket().SendJSON(res); err != nil {
 				if _, ok := err.(*websocket.CloseError); ok {
 					break
 				}
-				continue
 			}
 		}
 
