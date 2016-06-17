@@ -80,6 +80,16 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 		}
 	}
 
+	if req.ID == "" {
+		return &RPCResponse{
+			ID: req.ID,
+			Error: &RPCError{
+				Code:    -32600,
+				Message: "Invalid Request",
+			},
+		}
+	}
+
 	if req.Method == "" {
 		return &RPCResponse{
 			ID: req.ID,
