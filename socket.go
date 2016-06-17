@@ -68,13 +68,15 @@ func (s *Socket) ReadPACK(v interface{}) (err error) {
 
 // Text sends a text response with status code.
 func (s *Socket) SendText(data string) (err error) {
-	s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
-	return
+	return s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
 }
 
 // XML sends a xml response with status code.
 func (s *Socket) SendXML(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.TextMessage)
+	if err != nil {
+		return err
+	}
 	if data != nil {
 		xml.NewEncoder(w).Encode(data)
 	}
@@ -84,6 +86,9 @@ func (s *Socket) SendXML(data interface{}) (err error) {
 // JSON sends a json response with status code.
 func (s *Socket) SendJSON(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.TextMessage)
+	if err != nil {
+		return err
+	}
 	if data != nil {
 		json.NewEncoder(w).Encode(data)
 	}
@@ -93,6 +98,9 @@ func (s *Socket) SendJSON(data interface{}) (err error) {
 // PACK sends a msgpack response with status code.
 func (s *Socket) SendPACK(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.BinaryMessage)
+	if err != nil {
+		return err
+	}
 	if data != nil {
 		msgpack.NewEncoder(w).Encode(data)
 	}
