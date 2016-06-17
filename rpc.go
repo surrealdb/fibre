@@ -62,8 +62,6 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 			c.Socket().SendJSON(res)
 		}
 
-		return
-
 	})
 
 }
