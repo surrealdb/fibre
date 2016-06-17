@@ -143,18 +143,18 @@ func (f *Fibre) SetLogFormat(l string) {
 }
 
 // SetWait sets the graceful timeout duration.
-func (f *Fibre) SetWait(wait time.Duration) {
-	f.wait = wait * time.Second
+func (f *Fibre) SetWait(wait string) {
+	f.wait, _ = time.ParseDuration(wait)
 }
 
 // SetReadTimeout sets the max duration for reading requests.
-func (f *Fibre) SetReadTimeout(timeout time.Duration) {
-	f.rtimeout = timeout * time.Second
+func (f *Fibre) SetReadTimeout(wait string) {
+	f.rtimeout, _ = time.ParseDuration(wait)
 }
 
 // SetWriteTimeout sets the max duration for writing responses.
-func (f *Fibre) SetWriteTimeout(timeout time.Duration) {
-	f.wtimeout = timeout * time.Second
+func (f *Fibre) SetWriteTimeout(wait string) {
+	f.wtimeout, _ = time.ParseDuration(wait)
 }
 
 // SetHTTPErrorHandler registers a custom Echo.HTTPErrorHandler.
