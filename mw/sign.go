@@ -42,6 +42,11 @@ func Sign(opts ...*SignOpts) fibre.MiddlewareFunc {
 				return h(c)
 			}
 
+			// This is a websocket
+			if c.Request().Header().Get("Upgrade") == "websocket" {
+				return h(c)
+			}
+
 			head := c.Request().Header().Get("Authorization")
 
 			if head != "" && head[:6] == "Bearer" {
