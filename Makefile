@@ -38,7 +38,7 @@ test:
 
 .PHONY: glide
 glide:
-	glide install
+	glide update
 
 # The `make clean` command cleans
 # all object, build, and test files
