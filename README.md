@@ -2,7 +2,7 @@
 
 A simple and fast http framework for Go (Golang).
 
-[![](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/abcum/fibre) [![](https://goreportcard.com/badge/github.com/abcum/fibre?style=flat-square)](https://goreportcard.com/report/github.com/abcum/fibre) [![](https://img.shields.io/badge/license-Apache_License_2.0-blue.svg?style=flat-square)](https://github.com/abcum/fibre) 
+[![](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/abcum/fibre) [![](https://goreportcard.com/badge/github.com/abcum/fibre?style=flat-square)](https://goreportcard.com/report/github.com/abcum/fibre) [![](https://img.shields.io/badge/license-Apache_License_2.0-00bfff.svg?style=flat-square)](https://github.com/abcum/fibre) 
 
 #### Features
 
@@ -20,6 +20,6 @@ A simple and fast http framework for Go (Golang).
 
 #### Installation
 
-```
+```bash
 go get github.com/abcum/fibre
 ```
