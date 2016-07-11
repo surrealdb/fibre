@@ -107,6 +107,15 @@ func (c *Context) Type() string {
 	return cont
 }
 
+// Head returns the processed headers.
+func (c *Context) Head() map[string]string {
+	head := map[string]string{}
+	for k, _ := range c.Request().Header() {
+		head = append(head, c.Request().Header().Get(k))
+	}
+	return head
+}
+
 // Body returns the full content body.
 func (c *Context) Body() []byte {
 	body, _ := ioutil.ReadAll(c.Request().Body)
