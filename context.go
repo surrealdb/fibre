@@ -111,7 +111,7 @@ func (c *Context) Type() string {
 func (c *Context) Head() map[string]string {
 	head := map[string]string{}
 	for k, _ := range c.Request().Header() {
-		head = append(head, c.Request().Header().Get(k))
+		head[k] = c.Request().Header().Get(k)
 	}
 	return head
 }
