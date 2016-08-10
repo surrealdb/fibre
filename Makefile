@@ -38,7 +38,7 @@ test:
 
 .PHONY: glide
 glide:
-	glide update
+	glide install
 
 # The `make clean` command cleans
 # all object, build, and test files
@@ -55,7 +55,7 @@ clean:
 # dependencies, and runs a build.
 
 .PHONY: quick
-quick: 
+quick:
 	$(GO) build
 
 # The `make build` command compiles
