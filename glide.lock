@@ -1,18 +1,18 @@
 hash: 2b03dcb97bc56f15a5741373e138cd5c0ca3b7fe376c6e290f04a5add8081bd0
-updated: 2016-06-17T11:25:19.062161077+01:00
+updated: 2016-09-08T11:51:56.32933568+01:00
 imports:
 - name: github.com/abcum/logrus
   version: 119b6994c03cc9597e8c1873a47d715e34b5ed9a
 - name: github.com/dgrijalva/jwt-go
-  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
+  version: 01aeca54ebda6e0fbfafd0a524d234159c05ec20
 - name: github.com/golang/protobuf
-  version: 0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0
+  version: 874264fbbb43f4d91e999fecb4b40143ed611400
   subpackages:
   - proto
 - name: github.com/gorilla/websocket
-  version: a68708917c6a4f06314ab4e52493cc61359c9d42
+  version: 5e2e56d5dfd46884df1036f828777ee6273f2cff
 - name: github.com/satori/go.uuid
-  version: 879c5887cd475cd7864858769793b2ceb0d44feb
+  version: 0aa62d5ddceb50dbcb909d790b5345affd3669b6
 - name: github.com/yvasiyarov/go-metrics
   version: c25f46c4b94079672242ec48a545e7ca9ebe3aec
 - name: github.com/yvasiyarov/gorelic
@@ -20,28 +20,28 @@ imports:
 - name: github.com/yvasiyarov/newrelic_platform_go
   version: 9c099fbc30e90de5bb5c5f94aa5fd08f2daeaacd
 - name: golang.org/x/net
-  version: d7bf3545bb0dacf009c535b3d3fbf53ac0a339ab
+  version: 4d38db76854b199960801a1734443fd02870d7e1
   subpackages:
-  - netutil
   - context
 - name: golang.org/x/sys
-  version: 62bee037599929a6e9146f29d10dd5208c43507d
+  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
   subpackages:
   - unix
 - name: google.golang.org/appengine
-  version: 7f59a8c76b8594d06044bfe0bcbe475cb2020482
+  version: 267c27e7492265b84fc6719503b14a1e17975d79
   subpackages:
   - datastore
   - internal
-  - internal/datastore
   - internal/app_identity
-  - internal/modules
   - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/modules
   - internal/remote_api
 - name: gopkg.in/tylerb/graceful.v1
-  version: 84177357ab104029f9237abcb52339a7b80760ef
+  version: d7d7a205e779a4738d38eda0671fff8bfc965f14
 - name: gopkg.in/vmihailenco/msgpack.v2
-  version: 6915de5f21af6f5bcd2517da00d99c5131bb1da7
+  version: 9da2e9d7beae1b7c03cf7cfe8f4911958602a5de
   subpackages:
   - codes
-devImports: []
+testImports: []
