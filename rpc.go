@@ -190,60 +190,197 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 
 }
 
-func arg(fnc reflect.Value, k int, v interface{}) (reflect.Value, error) {
+func arg(fnc reflect.Value, k int, i interface{}) (reflect.Value, error) {
 
 	typf := fnc.Type().In(k + 1)
-	str := v.(string)
 
 	switch typf.Kind() {
 	default:
-		return reflect.ValueOf(str), nil
+		return reflect.ValueOf(i), nil
 
 	case reflect.String:
-		return reflect.ValueOf(str), nil
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(""), nil
+		case bool:
+			s := strconv.FormatBool(v)
+			return reflect.ValueOf(s), nil
+		case int64:
+			s := strconv.FormatInt(v, 10)
+			return reflect.ValueOf(s), nil
+		case float64:
+			s := strconv.FormatFloat(v, 'g', -1, 64)
+			return reflect.ValueOf(s), nil
+		case string:
+			return reflect.ValueOf(v), nil
+		}
 
 	case reflect.Bool:
-		cnv, err := strconv.ParseBool(str)
-		return reflect.ValueOf(cnv), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(false), nil
+		case bool:
+			return reflect.ValueOf(v), nil
+		case string:
+			c, e := strconv.ParseBool(v)
+			return reflect.ValueOf(c), e
+		}
 
 	case reflect.Float32:
-		cnv, err := strconv.ParseFloat(str, 32)
-		return reflect.ValueOf(float32(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(float32(0)), nil
+		case int64:
+			return reflect.ValueOf(float32(v)), nil
+		case float64:
+			return reflect.ValueOf(float32(v)), nil
+		case string:
+			c, e := strconv.ParseFloat(v, 32)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Float64:
-		cnv, err := strconv.ParseFloat(str, 64)
-		return reflect.ValueOf(float64(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(float64(0)), nil
+		case int64:
+			return reflect.ValueOf(float64(v)), nil
+		case float64:
+			return reflect.ValueOf(float64(v)), nil
+		case string:
+			c, e := strconv.ParseFloat(v, 64)
+			return reflect.ValueOf(c), e
+		}
 
 	case reflect.Int:
-		cnv, err := strconv.ParseInt(str, 10, 0)
-		return reflect.ValueOf(int(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(int(0)), nil
+		case int64:
+			return reflect.ValueOf(int(v)), nil
+		case float64:
+			return reflect.ValueOf(int(v)), nil
+		case string:
+			c, e := strconv.ParseInt(v, 10, 0)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Int8:
-		cnv, err := strconv.ParseInt(str, 10, 8)
-		return reflect.ValueOf(int8(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(int8(0)), nil
+		case int64:
+			return reflect.ValueOf(int8(v)), nil
+		case float64:
+			return reflect.ValueOf(int8(v)), nil
+		case string:
+			c, e := strconv.ParseInt(v, 10, 8)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Int16:
-		cnv, err := strconv.ParseInt(str, 10, 16)
-		return reflect.ValueOf(int16(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(int16(0)), nil
+		case int64:
+			return reflect.ValueOf(int16(v)), nil
+		case float64:
+			return reflect.ValueOf(int16(v)), nil
+		case string:
+			c, e := strconv.ParseInt(v, 10, 16)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Int32:
-		cnv, err := strconv.ParseInt(str, 10, 32)
-		return reflect.ValueOf(int32(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(int32(0)), nil
+		case int64:
+			return reflect.ValueOf(int32(v)), nil
+		case float64:
+			return reflect.ValueOf(int32(v)), nil
+		case string:
+			c, e := strconv.ParseInt(v, 10, 32)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Int64:
-		cnv, err := strconv.ParseInt(str, 10, 64)
-		return reflect.ValueOf(int64(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(int64(0)), nil
+		case int64:
+			return reflect.ValueOf(int64(v)), nil
+		case float64:
+			return reflect.ValueOf(int64(v)), nil
+		case string:
+			c, e := strconv.ParseInt(v, 10, 64)
+			return reflect.ValueOf(c), e
+		}
 
 	case reflect.Uint:
-		cnv, err := strconv.ParseUint(str, 10, 0)
-		return reflect.ValueOf(uint(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(uint(0)), nil
+		case int64:
+			return reflect.ValueOf(uint(v)), nil
+		case float64:
+			return reflect.ValueOf(uint(v)), nil
+		case string:
+			c, e := strconv.ParseUint(v, 10, 0)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Uint8:
-		cnv, err := strconv.ParseUint(str, 10, 8)
-		return reflect.ValueOf(uint8(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(uint8(0)), nil
+		case int64:
+			return reflect.ValueOf(uint8(v)), nil
+		case float64:
+			return reflect.ValueOf(uint8(v)), nil
+		case string:
+			c, e := strconv.ParseUint(v, 10, 8)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Uint16:
-		cnv, err := strconv.ParseUint(str, 10, 16)
-		return reflect.ValueOf(uint16(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(uint16(0)), nil
+		case int64:
+			return reflect.ValueOf(uint16(v)), nil
+		case float64:
+			return reflect.ValueOf(uint16(v)), nil
+		case string:
+			c, e := strconv.ParseUint(v, 10, 16)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Uint32:
-		cnv, err := strconv.ParseUint(str, 10, 32)
-		return reflect.ValueOf(uint32(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(uint32(0)), nil
+		case int64:
+			return reflect.ValueOf(uint32(v)), nil
+		case float64:
+			return reflect.ValueOf(uint32(v)), nil
+		case string:
+			c, e := strconv.ParseUint(v, 10, 32)
+			return reflect.ValueOf(c), e
+		}
+
 	case reflect.Uint64:
-		cnv, err := strconv.ParseUint(str, 10, 64)
-		return reflect.ValueOf(uint64(cnv)), err
+		switch v := i.(type) {
+		default:
+			return reflect.ValueOf(uint64(0)), nil
+		case int64:
+			return reflect.ValueOf(uint64(v)), nil
+		case float64:
+			return reflect.ValueOf(uint64(v)), nil
+		case string:
+			c, e := strconv.ParseUint(v, 10, 64)
+			return reflect.ValueOf(c), e
+		}
 
 	}
 
