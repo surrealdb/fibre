@@ -147,7 +147,10 @@ func (c *Context) Get(key string) interface{} {
 	if c.store == nil {
 		return nil
 	}
-	return c.store[key]
+	if v, ok := c.store[key]; ok {
+		return v
+	}
+	return nil
 }
 
 // Set saves data in the context.
