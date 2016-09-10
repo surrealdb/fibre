@@ -125,6 +125,18 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 
 	fnc := ins.MethodByName(req.Method)
 
+	for _, p := range req.Params {
+		if p == nil {
+			return &RPCResponse{
+				ID: req.ID,
+				Error: &RPCError{
+					Code:    -32602,
+					Message: "Invalid params",
+				},
+			}
+		}
+	}
+
 	cnti := fnc.Type().NumIn()
 	if cnti != len(req.Params)+1 {
 		return &RPCResponse{
