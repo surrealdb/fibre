@@ -25,11 +25,10 @@ import (
 	"net/http"
 	"net/url"
 
-	"encoding/json"
 	"encoding/xml"
 
 	"github.com/gorilla/websocket"
-	"gopkg.in/vmihailenco/msgpack.v2"
+	"github.com/ugorji/go/codec"
 )
 
 var wsupgrader = websocket.Upgrader{
@@ -224,7 +223,27 @@ func (c *Context) JSON(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		json.NewEncoder(c.response.ResponseWriter).Encode(data)
+		codec.NewEncoder(c.response.ResponseWriter, &jh).Encode(data)
+	}
+	return
+}
+
+// CBOR sends a cbor response with status code.
+func (c *Context) CBOR(code int, data interface{}) (err error) {
+	c.response.Header().Set("Content-Type", "application/cbor; charset=utf-8")
+	c.response.WriteHeader(code)
+	if data != nil {
+		codec.NewEncoder(c.response.ResponseWriter, &ch).Encode(data)
+	}
+	return
+}
+
+// BINC sends a binc response with status code.
+func (c *Context) BINC(code int, data interface{}) (err error) {
+	c.response.Header().Set("Content-Type", "application/binc; charset=utf-8")
+	c.response.WriteHeader(code)
+	if data != nil {
+		codec.NewEncoder(c.response.ResponseWriter, &bh).Encode(data)
 	}
 	return
 }
@@ -234,7 +253,7 @@ func (c *Context) PACK(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/msgpack; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		msgpack.NewEncoder(c.response.ResponseWriter).Encode(data)
+		codec.NewEncoder(c.response.ResponseWriter, &mh).Encode(data)
 	}
 	return
 }
@@ -243,11 +262,15 @@ func (c *Context) PACK(code int, data interface{}) (err error) {
 func (c *Context) Send(code int, data interface{}) (err error) {
 	switch c.Type() {
 	default:
-		return c.JSON(code, data)
+		return c.Text(code, data)
 	case "application/xml":
 		return c.XML(code, data)
 	case "application/json":
 		return c.JSON(code, data)
+	case "application/cbor":
+		return c.CBOR(code, data)
+	case "application/binc":
+		return c.BINC(code, data)
 	case "application/msgpack":
 		return c.PACK(code, data)
 	}
@@ -289,11 +312,19 @@ func (c *Context) Bind(i interface{}) (err error) {
 			err = NewHTTPError(400, err.Error())
 		}
 	case "application/json":
-		if err = json.NewDecoder(c.Request().Body).Decode(i); err != nil {
+		if err = codec.NewDecoder(c.Request().Body, &jh).Decode(i); err != nil {
+			err = NewHTTPError(400, err.Error())
+		}
+	case "application/cbor":
+		if err = codec.NewDecoder(c.Request().Body, &ch).Decode(i); err != nil {
+			err = NewHTTPError(400, err.Error())
+		}
+	case "application/binc":
+		if err = codec.NewDecoder(c.Request().Body, &bh).Decode(i); err != nil {
 			err = NewHTTPError(400, err.Error())
 		}
 	case "application/msgpack":
-		if err = msgpack.NewDecoder(c.Request().Body).Decode(i); err != nil {
+		if err = codec.NewDecoder(c.Request().Body, &mh).Decode(i); err != nil {
 			err = NewHTTPError(400, err.Error())
 		}
 	}

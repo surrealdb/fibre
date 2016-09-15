@@ -15,11 +15,9 @@
 package fibre
 
 import (
-	"encoding/json"
 	"encoding/xml"
-
 	"github.com/gorilla/websocket"
-	"gopkg.in/vmihailenco/msgpack.v2"
+	"github.com/ugorji/go/codec"
 )
 
 // Socket wraps an websocket.Conn
@@ -54,7 +52,25 @@ func (s *Socket) ReadJSON(v interface{}) (err error) {
 	if err != nil {
 		return err
 	}
-	return json.NewDecoder(r).Decode(v)
+	return codec.NewDecoder(r, &jh).Decode(v)
+}
+
+// ReadCBOR reads a cbor message from the socket.
+func (s *Socket) ReadCBOR(v interface{}) (err error) {
+	_, r, err := s.NextReader()
+	if err != nil {
+		return err
+	}
+	return codec.NewDecoder(r, &ch).Decode(v)
+}
+
+// ReadBINC reads a binc message from the socket.
+func (s *Socket) ReadBINC(v interface{}) (err error) {
+	_, r, err := s.NextReader()
+	if err != nil {
+		return err
+	}
+	return codec.NewDecoder(r, &bh).Decode(v)
 }
 
 // ReadPACK reads a msgpack message from the socket.
@@ -63,7 +79,7 @@ func (s *Socket) ReadPACK(v interface{}) (err error) {
 	if err != nil {
 		return err
 	}
-	return msgpack.NewDecoder(r).Decode(v)
+	return codec.NewDecoder(r, &mh).Decode(v)
 }
 
 // Text sends a text response with status code.
@@ -90,7 +106,31 @@ func (s *Socket) SendJSON(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		json.NewEncoder(w).Encode(data)
+		codec.NewEncoder(w, &jh).Encode(data)
+	}
+	return w.Close()
+}
+
+// CBOR sends a cbor response with status code.
+func (s *Socket) SendCBOR(data interface{}) (err error) {
+	w, err := s.NextWriter(websocket.BinaryMessage)
+	if err != nil {
+		return err
+	}
+	if data != nil {
+		codec.NewEncoder(w, &ch).Encode(data)
+	}
+	return w.Close()
+}
+
+// BINC sends a binc response with status code.
+func (s *Socket) SendBINC(data interface{}) (err error) {
+	w, err := s.NextWriter(websocket.BinaryMessage)
+	if err != nil {
+		return err
+	}
+	if data != nil {
+		codec.NewEncoder(w, &bh).Encode(data)
 	}
 	return w.Close()
 }
@@ -102,7 +142,7 @@ func (s *Socket) SendPACK(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		msgpack.NewEncoder(w).Encode(data)
+		codec.NewEncoder(w, &mh).Encode(data)
 	}
 	return w.Close()
 }
