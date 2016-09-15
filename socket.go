@@ -32,6 +32,95 @@ func NewSocket(i *websocket.Conn, c *Context, f *Fibre) *Socket {
 	return &Socket{i, c, f}
 }
 
+func (s *Socket) err(err error) error {
+	if websocket.IsUnexpectedCloseError(err, 1000, 1001) {
+		return err
+	}
+	return nil
+}
+
+func (s *Socket) rpc(format string) (chan *RPCResponse, chan *RPCRequest, chan error) {
+
+	send := make(chan *RPCResponse)
+	recv := make(chan *RPCRequest)
+	quit := make(chan error, 1)
+	exit := make(chan int, 1)
+
+	go func() {
+	loop:
+		for {
+			select {
+			case <-exit:
+				break loop
+			default:
+
+				var e error
+				var v RPCRequest
+
+				switch format {
+				default:
+					e = s.ReadJSON(&v)
+				case "JSON":
+					e = s.ReadJSON(&v)
+				case "CBOR":
+					e = s.ReadCBOR(&v)
+				case "BINC":
+					e = s.ReadBINC(&v)
+				case "PACK":
+					e = s.ReadPACK(&v)
+				}
+
+				if e != nil {
+					s.Close()
+					quit <- s.err(e)
+					exit <- 0
+					break loop
+				}
+
+				recv <- &v
+
+			}
+		}
+	}()
+
+	go func() {
+	loop:
+		for {
+			select {
+			case <-exit:
+				break loop
+			case v := <-send:
+
+				var e error
+
+				switch format {
+				default:
+					e = s.SendJSON(v)
+				case "JSON":
+					e = s.SendJSON(v)
+				case "CBOR":
+					e = s.SendCBOR(v)
+				case "BINC":
+					e = s.SendBINC(v)
+				case "PACK":
+					e = s.SendPACK(v)
+				}
+
+				if e != nil {
+					s.Close()
+					quit <- s.err(e)
+					exit <- 0
+					break loop
+				}
+
+			}
+		}
+	}()
+
+	return send, recv, quit
+
+}
+
 // Read reads a message from the socket.
 func (s *Socket) Read() (int, []byte, error) {
 	return s.Conn.ReadMessage()

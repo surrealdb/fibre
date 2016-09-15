@@ -17,8 +17,6 @@ package fibre
 import (
 	"reflect"
 	"strconv"
-
-	"github.com/gorilla/websocket"
 )
 
 // RPCError represents a jsonrpc error
@@ -47,8 +45,10 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 	f.router.Add(POST, p, func(c *Context) (err error) {
 		req := &RPCRequest{}
 		c.Bind(req)
-		res := rpc(req, c, i)
-		return c.Send(200, res)
+		if res := rpc(req, c, i); res != nil {
+			return c.Send(200, res)
+		}
+		return c.Code(200)
 	})
 
 	f.router.Add(GET, p, func(c *Context) (err error) {
@@ -57,17 +57,15 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 			return
 		}
 
+		send, recv, quit := c.Socket().rpc(c.Query("format"))
+
 		for {
-			req := &RPCRequest{}
-			if err = c.Socket().ReadJSON(req); err != nil {
-				if _, ok := err.(*websocket.CloseError); ok {
-					break
-				}
-			}
-			res := rpc(req, c, i)
-			if err = c.Socket().SendJSON(res); err != nil {
-				if _, ok := err.(*websocket.CloseError); ok {
-					break
+			select {
+			case err := <-quit:
+				return err
+			case req := <-recv:
+				if res := rpc(req, c, i); res != nil {
+					send <- res
 				}
 			}
 		}
