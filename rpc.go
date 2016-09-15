@@ -76,7 +76,31 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 
 }
 
-func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
+func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
+
+	defer func() {
+
+		if r := recover(); r != nil && req.ID != "" {
+
+			o = &RPCResponse{
+				ID: req.ID,
+				Error: &RPCError{
+					Code:    -32099,
+					Message: "Unknown error",
+				},
+			}
+
+			if err, ok := r.(error); ok {
+				o.Error.Message = err.(error).Error()
+			}
+
+		}
+
+		if req.ID == "" {
+			o = nil
+		}
+
+	}()
 
 	ins := reflect.ValueOf(i)
 
