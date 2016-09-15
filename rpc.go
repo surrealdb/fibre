@@ -110,8 +110,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 		}
 	}
 
-	_, ok := ins.Type().MethodByName(req.Method)
-	if !ok {
+	if _, ok := ins.Type().MethodByName(req.Method); !ok {
 		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
@@ -123,20 +122,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 
 	fnc := ins.MethodByName(req.Method)
 
-	for _, p := range req.Params {
-		if p == nil {
-			return &RPCResponse{
-				ID: req.ID,
-				Error: &RPCError{
-					Code:    -32602,
-					Message: "Invalid params",
-				},
-			}
-		}
-	}
-
-	cnti := fnc.Type().NumIn()
-	if cnti != len(req.Params)+1 {
+	if fnc.Type().NumIn() != len(req.Params)+1 {
 		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
@@ -146,8 +132,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 		}
 	}
 
-	cnto := fnc.Type().NumOut()
-	if cnto != 2 {
+	if fnc.Type().NumOut() != 2 {
 		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
@@ -202,11 +187,26 @@ func rpc(req *RPCRequest, c *Context, i interface{}) interface{} {
 
 func arg(fnc reflect.Value, k int, i interface{}) (reflect.Value, error) {
 
-	typf := fnc.Type().In(k + 1)
+	a := fnc.Type().In(k + 1)
 
-	switch typf.Kind() {
+	switch a.Kind() {
+
 	default:
 		return reflect.ValueOf(i), nil
+
+	case reflect.Map:
+		if i == nil || a != reflect.TypeOf(i) {
+			return reflect.MakeMap(a), nil
+		} else {
+			return reflect.ValueOf(i), nil
+		}
+
+	case reflect.Slice:
+		if i == nil || a != reflect.TypeOf(i) {
+			return reflect.MakeSlice(a, 0, 0), nil
+		} else {
+			return reflect.ValueOf(i), nil
+		}
 
 	case reflect.String:
 		switch v := i.(type) {
