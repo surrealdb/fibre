@@ -15,14 +15,12 @@
 package mw
 
 import (
-	"sort"
-
 	"github.com/abcum/fibre"
 )
 
 // TypeOpts defines options for the Type middleware.
 type TypeOpts struct {
-	AllowedContent []string
+	AllowedContent map[string]bool
 }
 
 // Type defines middleware for checking the request content type.
@@ -40,18 +38,8 @@ func Type(opts ...*TypeOpts) fibre.MiddlewareFunc {
 				return h(c)
 			}
 
-			// Sort and search opts.AllowedContent types
-			sort.Strings(opts[0].AllowedContent)
-			i := sort.SearchStrings(opts[0].AllowedContent, c.Type())
-
-			if c.Request().ContentLength == 0 {
+			if _, ok := opts[0].AllowedContent[c.Type()]; ok {
 				return h(c)
-			}
-
-			if c.Request().ContentLength >= 1 {
-				if i < len(opts[0].AllowedContent) {
-					return h(c)
-				}
 			}
 
 			return fibre.NewHTTPError(415)
