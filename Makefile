@@ -13,6 +13,7 @@
 # limitations under the License.
 
 GO ?= go
+LDF :=
 
 # The `make default` command cleans
 # the go build and test files and
@@ -27,9 +28,8 @@ default:
 # tests, found within all sub-folders
 # in the project folder.
 
-.PHONY: test
-test: clean
-test:
+.PHONY: tests
+tests:
 	$(GO) test `glide novendor`
 
 # The `make glide` command ensures that
@@ -49,6 +49,15 @@ clean:
 	rm -rf vendor
 	$(GO) clean -i `glide novendor`
 	find . -name '*.test' -type f -exec rm -f {} \;
+	find . -name '*.gen.go' -type f -exec rm -f {} \;
+
+# The `make setup` command runs the
+# go generate command in all of the
+# project subdirectories.
+
+.PHONY: setup
+setup:
+	CGO_ENABLED=0 $(GO) generate -v `glide novendor`
 
 # The `make quick` command compiles
 # the build flags, gets the project
@@ -56,24 +65,22 @@ clean:
 
 .PHONY: quick
 quick:
-	$(GO) build
+	CGO_ENABLED=0 $(GO) build
 
 # The `make build` command compiles
 # the build flags, gets the project
 # dependencies, and runs a build.
 
 .PHONY: build
-build: clean
-build: glide
+build: LDF += $(shell GOPATH=${GOPATH} build/flags.sh)
 build:
-	$(GO) build -v -ldflags '$(LDF)'
+	CGO_ENABLED=0 $(GO) build -v -ldflags '$(LDF)'
 
 # The `make install` command compiles
 # the build flags, gets the project
 # dependencies, and runs an install.
 
 .PHONY: install
-install: clean
-install: glide
+install: LDF += $(shell GOPATH=${GOPATH} build/flags.sh)
 install:
-	$(GO) install -v -ldflags '$(LDF)'
+	CGO_ENABLED=0 $(GO) install -v -ldflags '$(LDF)'
