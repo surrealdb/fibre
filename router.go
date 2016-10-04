@@ -176,7 +176,7 @@ func hasRemaining(pos int, path string) bool {
 }
 
 func consumeCatch(pos int, path string) (s string, i int) {
-	return path[pos:len(path)], len(path)
+	return path[pos:], len(path)
 }
 
 func consumeIdent(pos int, path string) (s string, i int) {

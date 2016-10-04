@@ -109,7 +109,7 @@ func (c *Context) Type() string {
 // Head returns the processed headers.
 func (c *Context) Head() map[string]string {
 	head := map[string]string{}
-	for k, _ := range c.Request().Header() {
+	for k := range c.Request().Header() {
 		head[k] = c.Request().Header().Get(k)
 	}
 	return head
