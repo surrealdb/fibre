@@ -11,8 +11,5 @@ import:
 - package: github.com/ugorji/go
   subpackages:
   - codec
-- package: github.com/yvasiyarov/go-metrics
-- package: github.com/yvasiyarov/gorelic
-  version: ^0.0.6
 - package: gopkg.in/tylerb/graceful.v1
   version: ^1.2.13

@@ -1,5 +1,5 @@
-hash: e82df28bd6188a4e9867f4230478b752ca79747361af9f4e5dde558ce3d8f0c0
-updated: 2016-10-06T13:47:49.785786368+01:00
+hash: 3ec65464b88691db44adf60617221c67990212090a59c63295014befaf961e8e
+updated: 2016-10-06T16:00:19.176185938+01:00
 imports:
 - name: github.com/abcum/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
@@ -13,16 +13,6 @@ imports:
   version: b94837a2404ab90efe9289e77a70694c355739cb
   subpackages:
   - codec
-- name: github.com/yvasiyarov/go-metrics
-  version: c25f46c4b94079672242ec48a545e7ca9ebe3aec
-- name: github.com/yvasiyarov/gorelic
-  version: 4dc1bb7ab951bc884feb2c009092b1a454152355
-- name: github.com/yvasiyarov/newrelic_platform_go
-  version: 9c099fbc30e90de5bb5c5f94aa5fd08f2daeaacd
-- name: golang.org/x/sys
-  version: a646d33e2ee3172a661fc09bca23bb4889a41bc8
-  subpackages:
-  - unix
 - name: gopkg.in/tylerb/graceful.v1
   version: 50a48b6e73fcc75b45e22c05b79629a67c79e938
 testImports: []
