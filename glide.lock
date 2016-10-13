@@ -1,5 +1,5 @@
 hash: 3ec65464b88691db44adf60617221c67990212090a59c63295014befaf961e8e
-updated: 2016-10-06T16:00:19.176185938+01:00
+updated: 2016-10-13T19:30:42.014263158+01:00
 imports:
 - name: github.com/abcum/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
@@ -10,9 +10,13 @@ imports:
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/ugorji/go
-  version: b94837a2404ab90efe9289e77a70694c355739cb
+  version: faddd6128c66c4708f45fdc007f575f75e592a3c
   subpackages:
   - codec
+- name: golang.org/x/sys
+  version: 9bb9f0998d48b31547d975974935ae9b48c7a03c
+  subpackages:
+  - unix
 - name: gopkg.in/tylerb/graceful.v1
   version: 50a48b6e73fcc75b45e22c05b79629a67c79e938
 testImports: []
