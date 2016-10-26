@@ -95,7 +95,7 @@ func (r *Response) Hijack() (net.Conn, *bufio.ReadWriter, error) {
 	return r.ResponseWriter.(http.Hijacker).Hijack()
 }
 
-// CloseNotify enabled detecting when the underlying connection has gone away.
+// CloseNotify enables detecting when the underlying connection has gone away.
 func (r *Response) CloseNotify() <-chan bool {
 	return r.ResponseWriter.(http.CloseNotifier).CloseNotify()
 }
