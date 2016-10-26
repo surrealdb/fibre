@@ -38,6 +38,11 @@ func Type(opts ...*TypeOpts) fibre.MiddlewareFunc {
 				return h(c)
 			}
 
+			// This is a websocket
+			if c.Request().Header().Get("Upgrade") == "websocket" {
+				return h(c)
+			}
+
 			if _, ok := opts[0].AllowedContent[c.Type()]; ok {
 				return h(c)
 			}
