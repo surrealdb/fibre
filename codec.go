@@ -31,7 +31,7 @@ func init() {
 
 	// JSONHandle
 
-	jh.Canonical = false
+	jh.Canonical = true
 	jh.InternString = true
 	jh.CheckCircularRef = false
 	jh.AsSymbols = codec.AsSymbolDefault
@@ -40,7 +40,7 @@ func init() {
 
 	// CBORHandle
 
-	ch.Canonical = false
+	ch.Canonical = true
 	ch.InternString = true
 	ch.CheckCircularRef = false
 	ch.AsSymbols = codec.AsSymbolDefault
@@ -49,7 +49,7 @@ func init() {
 
 	// BINCHandle
 
-	bh.Canonical = false
+	bh.Canonical = true
 	bh.InternString = true
 	bh.CheckCircularRef = false
 	bh.AsSymbols = codec.AsSymbolDefault
@@ -59,7 +59,7 @@ func init() {
 	// PACKHandle
 
 	mh.WriteExt = true
-	mh.Canonical = false
+	mh.Canonical = true
 	mh.RawToString = true
 	mh.InternString = true
 	mh.CheckCircularRef = false
