@@ -1,5 +1,5 @@
 hash: 3ec65464b88691db44adf60617221c67990212090a59c63295014befaf961e8e
-updated: 2016-10-13T19:30:42.014263158+01:00
+updated: 2016-11-04T11:09:16.389274366Z
 imports:
 - name: github.com/abcum/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
@@ -14,7 +14,7 @@ imports:
   subpackages:
   - codec
 - name: golang.org/x/sys
-  version: 9bb9f0998d48b31547d975974935ae9b48c7a03c
+  version: c200b10b5d5e122be351b67af224adc6128af5bf
   subpackages:
   - unix
 - name: gopkg.in/tylerb/graceful.v1
