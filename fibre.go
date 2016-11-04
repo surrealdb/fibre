@@ -25,7 +25,6 @@ type (
 	Fibre struct {
 		pool         sync.Pool
 		name         string
-		opts         interface{}
 		wait         time.Duration
 		rtimeout     time.Duration
 		wtimeout     time.Duration
@@ -79,12 +78,9 @@ var (
 )
 
 // Server creates a new server instance.
-func Server(opts interface{}) (f *Fibre) {
+func Server() (f *Fibre) {
 
 	f = &Fibre{}
-
-	// Set the options
-	f.opts = opts
 
 	// Set the default name
 	f.name = "fibre"
@@ -110,11 +106,6 @@ func Server(opts interface{}) (f *Fibre) {
 // Name returns the instance name.
 func (f *Fibre) Name() string {
 	return f.name
-}
-
-// Opts returns the instance options.
-func (f *Fibre) Opts() interface{} {
-	return f.opts
 }
 
 // Logger returns the logger instance.
