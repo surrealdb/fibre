@@ -28,6 +28,7 @@ import (
 	"encoding/xml"
 
 	"github.com/gorilla/websocket"
+	"github.com/mitchellh/mapstructure"
 	"github.com/ugorji/go/codec"
 )
 
@@ -325,6 +326,21 @@ func (c *Context) Bind(i interface{}) (err error) {
 		}
 	case "application/msgpack":
 		if err = codec.NewDecoder(c.Request().Body, &mh).Decode(i); err != nil {
+			err = NewHTTPError(400, err.Error())
+		}
+	case "application/x-www-form-urlencoded":
+		obj := map[string]interface{}{}
+		if err = c.request.ParseForm(); err != nil {
+			err = NewHTTPError(400, err.Error())
+		}
+		for k, v := range c.request.Form {
+			if len(v) == 1 {
+				obj[k] = v[0]
+			} else {
+				obj[k] = v
+			}
+		}
+		if err = mapstructure.Decode(obj, i); err != nil {
 			err = NewHTTPError(400, err.Error())
 		}
 	}

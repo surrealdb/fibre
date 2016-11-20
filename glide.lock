@@ -1,5 +1,5 @@
 hash: 3ec65464b88691db44adf60617221c67990212090a59c63295014befaf961e8e
-updated: 2016-11-20T09:23:45.999134745Z
+updated: 2016-11-20T09:23:46.999134745Z
 imports:
 - name: github.com/abcum/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
@@ -7,6 +7,8 @@ imports:
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/gorilla/websocket
   version: 1f512fc3f05332ba7117626cdfb4e07474e58e60
+- name: github.com/mitchellh/mapstructure
+  version: f3009df150dadf309fdee4a54ed65c124afad715
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/ugorji/go
