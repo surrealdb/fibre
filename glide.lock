@@ -1,5 +1,5 @@
 hash: 3ec65464b88691db44adf60617221c67990212090a59c63295014befaf961e8e
-updated: 2016-11-20T09:23:46.999134745Z
+updated: 2016-11-26T14:50:45.756275077Z
 imports:
 - name: github.com/abcum/logrus
   version: 4b6ea7319e214d98c938f12692336f7ca9348d6b
@@ -9,6 +9,14 @@ imports:
   version: 1f512fc3f05332ba7117626cdfb4e07474e58e60
 - name: github.com/mitchellh/mapstructure
   version: f3009df150dadf309fdee4a54ed65c124afad715
+- name: github.com/newrelic/go-agent
+  version: 7d12ae2201fc160e486197614a6f65afcf3f8170
+  subpackages:
+  - internal
+  - internal/jsonx
+  - internal/logger
+  - internal/sysinfo
+  - internal/utilization
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/ugorji/go
@@ -16,7 +24,7 @@ imports:
   subpackages:
   - codec
 - name: golang.org/x/sys
-  version: b699b7032584f0953262cb2788a0ca19bb494703
+  version: 30237cf4eefd639b184d1f2cb77a581ea0be8947
   subpackages:
   - unix
 - name: gopkg.in/tylerb/graceful.v1
