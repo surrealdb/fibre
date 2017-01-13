@@ -22,13 +22,19 @@ Temporary Items
 .apdisk
 
 # -----------------------------------
-# Builds
+# Files
 # -----------------------------------
 
-fibre
+*.test
+*.cover
+*.gen.go
 
 # -----------------------------------
-# Other
+# Folders
 # -----------------------------------
 
+app/
+dev/
 vendor/
+node_modules/
+bower_components/
