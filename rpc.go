@@ -218,23 +218,20 @@ func arg(fnc reflect.Value, k int, i interface{}) (reflect.Value, error) {
 	case reflect.Interface:
 		if i == nil {
 			return reflect.ValueOf(new(RPCNull)), nil
-		} else {
-			return reflect.ValueOf(i), nil
 		}
+		return reflect.ValueOf(i), nil
 
 	case reflect.Map:
 		if i == nil || a != reflect.TypeOf(i) {
 			return reflect.MakeMap(a), nil
-		} else {
-			return reflect.ValueOf(i), nil
 		}
+		return reflect.ValueOf(i), nil
 
 	case reflect.Slice:
 		if i == nil || a != reflect.TypeOf(i) {
 			return reflect.MakeSlice(a, 0, 0), nil
-		} else {
-			return reflect.ValueOf(i), nil
 		}
+		return reflect.ValueOf(i), nil
 
 	case reflect.String:
 		switch v := i.(type) {
