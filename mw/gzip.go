@@ -61,7 +61,14 @@ var writerPool = sync.Pool{
 func Gzip() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
+
+			// This is a websocket
+			if c.Request().Header().Get("Upgrade") == "websocket" {
+				return h(c)
+			}
+
 			c.Response().Header().Add("Vary", "Accept-Encoding")
+
 			if strings.Contains(c.Request().Header().Get("Accept-Encoding"), "gzip") {
 				w := writerPool.Get().(*gzip.Writer)
 				w.Reset(c.Response().Writer())
@@ -73,10 +80,13 @@ func Gzip() fibre.MiddlewareFunc {
 				c.Response().Header().Set("Content-Encoding", "gzip")
 				c.Response().SetWriter(gw)
 			}
+
 			if err := h(c); err != nil {
 				c.Error(err)
 			}
+
 			return nil
+
 		}
 	}
 }
