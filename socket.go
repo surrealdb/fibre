@@ -39,7 +39,7 @@ func (s *Socket) err(err error) error {
 	return nil
 }
 
-func (s *Socket) rpc(format string) (chan *RPCResponse, chan *RPCRequest, chan error) {
+func (s *Socket) rpc(format string) (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 
 	send := make(chan *RPCResponse)
 	recv := make(chan *RPCRequest)
