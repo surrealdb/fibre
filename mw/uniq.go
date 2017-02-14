@@ -44,6 +44,8 @@ func Uniq(opts ...*UniqOpts) fibre.MiddlewareFunc {
 
 			c.Response().Header().Set(headerKey, id)
 
+			c.Set("id", id)
+
 			return h(c)
 
 		}

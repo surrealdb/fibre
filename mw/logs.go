@@ -52,6 +52,10 @@ func Logs() fibre.MiddlewareFunc {
 				"speed":  time.Since(now),
 			})
 
+			if id := c.Get("id"); id != nil {
+				log = log.WithField("id", id)
+			}
+
 			switch {
 			case num >= 500:
 				log.Error("Completed request")
