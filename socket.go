@@ -171,12 +171,12 @@ func (s *Socket) ReadPACK(v interface{}) (err error) {
 	return codec.NewDecoder(r, &mh).Decode(v)
 }
 
-// Text sends a text response with status code.
+// SendText sends a text response with status code.
 func (s *Socket) SendText(data string) (err error) {
 	return s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
 }
 
-// XML sends a xml response with status code.
+// SendXML sends a xml response with status code.
 func (s *Socket) SendXML(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.TextMessage)
 	if err != nil {
@@ -188,7 +188,7 @@ func (s *Socket) SendXML(data interface{}) (err error) {
 	return w.Close()
 }
 
-// JSON sends a json response with status code.
+// SendJSON sends a json response with status code.
 func (s *Socket) SendJSON(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.TextMessage)
 	if err != nil {
@@ -200,7 +200,7 @@ func (s *Socket) SendJSON(data interface{}) (err error) {
 	return w.Close()
 }
 
-// CBOR sends a cbor response with status code.
+// SendCBOR sends a cbor response with status code.
 func (s *Socket) SendCBOR(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.BinaryMessage)
 	if err != nil {
@@ -212,7 +212,7 @@ func (s *Socket) SendCBOR(data interface{}) (err error) {
 	return w.Close()
 }
 
-// BINC sends a binc response with status code.
+// SendBINC sends a binc response with status code.
 func (s *Socket) SendBINC(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.BinaryMessage)
 	if err != nil {
@@ -224,7 +224,7 @@ func (s *Socket) SendBINC(data interface{}) (err error) {
 	return w.Close()
 }
 
-// PACK sends a msgpack response with status code.
+// SendPACK sends a msgpack response with status code.
 func (s *Socket) SendPACK(data interface{}) (err error) {
 	w, err := s.NextWriter(websocket.BinaryMessage)
 	if err != nil {

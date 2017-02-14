@@ -19,7 +19,7 @@ import (
 	"strconv"
 )
 
-// RPCError represents a null argument
+// RPCNull represents a null argument
 type RPCNull struct{}
 
 // RPCError represents a jsonrpc error
