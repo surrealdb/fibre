@@ -30,14 +30,14 @@ type RPCError struct {
 
 // RPCRequest represents an incoming jsonrpc request
 type RPCRequest struct {
-	ID     string        `json:"id" msgpack:"id"`
+	ID     interface{}   `json:"id" msgpack:"id"`
 	Method string        `json:"method" msgpack:"method"`
 	Params []interface{} `json:"params" msgpack:"params"`
 }
 
 // RPCResponse represents an outgoing jsonrpc response
 type RPCResponse struct {
-	ID     string      `json:"id" msgpack:"id"`
+	ID     interface{} `json:"id" msgpack:"id"`
 	Error  *RPCError   `json:"error,omitempty" msgpack:"error,omitempty"`
 	Result interface{} `json:"result,omitempty" msgpack:"result,omitempty"`
 }
