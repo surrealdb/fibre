@@ -15,62 +15,36 @@
 package mw
 
 import (
-	"time"
-
 	"github.com/abcum/fibre"
 )
 
-// Logs defines middleware for logging requests and responses.
-func Logs() fibre.MiddlewareFunc {
+// Sock defines middleware for logging websocket connections.
+func Sock() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) (err error) {
 
-			if err = h(c); err != nil {
-				c.Error(err)
+			if c.Request().Header().Get("Upgrade") != "websocket" {
+				return h(c)
 			}
 
 			ip := c.IP()
 			req := c.Request()
-			res := c.Response()
-			num := res.Status()
-			now := c.Request().Start()
-			met := req.Method
 			url := req.URL().Path
-
-			if c.Socket() != nil {
-				met = "WS"
-			}
 
 			log := c.Fibre().Logger().WithFields(map[string]interface{}{
 				"prefix": c.Fibre().Name(),
 				"ip":     ip,
 				"url":    url,
-				"size":   res.Size(),
-				"status": num,
-				"method": met,
-				"time":   time.Since(now),
+				"method": "WS",
 			})
 
 			if id := c.Get("id"); id != nil {
 				log = log.WithField("id", id)
 			}
 
-			if err != nil {
-				log = log.WithError(err)
-			}
+			log.Info("Opening websocket")
 
-			switch {
-			case num >= 500:
-				log.Error("Completed request")
-			case num >= 400:
-				log.Warn("Completed request")
-			case num >= 300:
-				log.Info("Completed request")
-			case num >= 200:
-				log.Info("Completed request")
-			}
-
-			return nil
+			return h(c)
 
 		}
 	}
