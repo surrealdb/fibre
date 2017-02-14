@@ -19,6 +19,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"io/ioutil"
 
@@ -35,6 +36,7 @@ import (
 var wsupgrader = websocket.Upgrader{
 	ReadBufferSize:    4096,
 	WriteBufferSize:   4096,
+	HandshakeTimeout:  time.Second * 10,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
