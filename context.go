@@ -36,6 +36,7 @@ import (
 var wsupgrader = websocket.Upgrader{
 	ReadBufferSize:    4096,
 	WriteBufferSize:   4096,
+	EnableCompression: true,
 	HandshakeTimeout:  time.Second * 10,
 	CheckOrigin: func(r *http.Request) bool {
 		return true
