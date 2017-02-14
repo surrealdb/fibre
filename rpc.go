@@ -19,6 +19,9 @@ import (
 	"strconv"
 )
 
+// RPCError represents a null argument
+type RPCNull struct{}
+
 // RPCError represents a jsonrpc error
 type RPCError struct {
 	Code    int    `json:"code" msgpack:"code"`
@@ -136,7 +139,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 
 	fnc := ins.MethodByName(req.Method)
 
-	if fnc.Type().NumIn() != len(req.Params)+1 {
+	if fnc.Type().NumIn()-1 < len(req.Params) {
 		return &RPCResponse{
 			ID: req.ID,
 			Error: &RPCError{
@@ -160,7 +163,11 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 
 	args = append(args, reflect.ValueOf(c))
 
-	for k, v := range req.Params {
+	for k := 0; k < fnc.Type().NumIn()-1; k++ {
+		var v interface{}
+		if k < len(req.Params) {
+			v = req.Params[k]
+		}
 		val, err := arg(fnc, k, v)
 		if err != nil {
 			return &RPCResponse{
@@ -207,6 +214,13 @@ func arg(fnc reflect.Value, k int, i interface{}) (reflect.Value, error) {
 
 	default:
 		return reflect.ValueOf(i), nil
+
+	case reflect.Interface:
+		if i == nil {
+			return reflect.ValueOf(new(RPCNull)), nil
+		} else {
+			return reflect.ValueOf(i), nil
+		}
 
 	case reflect.Map:
 		if i == nil || a != reflect.TypeOf(i) {
