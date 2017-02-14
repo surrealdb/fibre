@@ -33,7 +33,7 @@ func NewSocket(i *websocket.Conn, c *Context, f *Fibre) *Socket {
 }
 
 func (s *Socket) err(err error) error {
-	if websocket.IsUnexpectedCloseError(err, 1000, 1001) {
+	if websocket.IsUnexpectedCloseError(err, 1000, 1001, 1005) {
 		return err
 	}
 	return nil
