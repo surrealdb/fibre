@@ -76,7 +76,7 @@ func (c *Context) Error(err error) {
 
 // Upgrade the http websocket connection.
 func (c *Context) Upgrade() (err error) {
-	if c.Request().Header().Get("Upgrade") == "websocket" {
+	if websocket.IsWebSocketUpgrade(c.Request().Request) {
 		var sck *websocket.Conn
 		req := c.request.Request
 		res := c.response.ResponseWriter
