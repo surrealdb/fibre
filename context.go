@@ -33,17 +33,6 @@ import (
 	"github.com/ugorji/go/codec"
 )
 
-var wsupgrader = websocket.Upgrader{
-	ReadBufferSize:    4096,
-	WriteBufferSize:   4096,
-	EnableCompression: true,
-	HandshakeTimeout:  time.Second * 10,
-	Subprotocols:      []string{"default", "fibre"},
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
-}
-
 // Context represents context for the current request.
 type Context struct {
 	fibre    *Fibre
@@ -73,20 +62,6 @@ func (c *Context) Fibre() *Fibre {
 // Error invokes the registered HTTP error handler. Generally used by middleware.
 func (c *Context) Error(err error) {
 	c.fibre.errorHandler(err, c)
-}
-
-// Upgrade the http websocket connection.
-func (c *Context) Upgrade() (err error) {
-	if websocket.IsWebSocketUpgrade(c.Request().Request) {
-		var sck *websocket.Conn
-		req := c.request.Request
-		res := c.response.ResponseWriter
-		if sck, err = wsupgrader.Upgrade(res, req, nil); err == nil {
-			c.socket = NewSocket(sck, c, c.Fibre())
-		}
-		return err
-	}
-	return NewHTTPError(426, "Upgrade required")
 }
 
 // Socket returns the websocket connection.
@@ -386,6 +361,45 @@ func (c *Context) IP() string {
 	addr := c.Request().RemoteAddr
 	addr, _, _ = net.SplitHostPort(addr)
 	return addr
+
+}
+
+// Upgrade upgrades the http request to a websocket connection.
+func (c *Context) Upgrade(protocols ...string) (err error) {
+
+	wes := websocket.Upgrader{
+		ReadBufferSize:    4096,
+		WriteBufferSize:   4096,
+		EnableCompression: true,
+		Subprotocols:      protocols,
+		HandshakeTimeout:  time.Second * 10,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
+
+	if websocket.IsWebSocketUpgrade(c.Request().Request) {
+
+		var sck *websocket.Conn
+		req := c.request.Request
+		res := c.response.ResponseWriter
+		pro := websocket.Subprotocols(c.Request().Request)
+
+		if len(protocols) > 0 && !in(protocols, pro) {
+			return NewHTTPError(415, "Unsupported Media Type")
+		}
+
+		if sck, err = wes.Upgrade(res, req, nil); err != nil {
+			return NewHTTPError(426, "Upgrade required")
+		}
+
+		c.socket = NewSocket(sck, c, c.Fibre())
+
+		return nil
+
+	}
+
+	return NewHTTPError(426, "Upgrade required")
 
 }
 

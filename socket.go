@@ -33,18 +33,19 @@ func NewSocket(i *websocket.Conn, c *Context, f *Fibre) *Socket {
 }
 
 func (s *Socket) err(err error) error {
-	if websocket.IsUnexpectedCloseError(err, 1000, 1001, 1005) {
-		return err
+	if websocket.IsCloseError(err, 1000, 1001, 1005) {
+		return nil
 	}
-	return nil
+	return NewHTTPError(400)
 }
 
-func (s *Socket) rpc(format string) (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
+func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 
 	send := make(chan *RPCResponse)
 	recv := make(chan *RPCRequest)
 	quit := make(chan error, 1)
 	exit := make(chan int, 1)
+	kind := s.Subprotocol()
 
 	go func() {
 	loop:
@@ -54,30 +55,26 @@ func (s *Socket) rpc(format string) (chan<- *RPCResponse, <-chan *RPCRequest, ch
 				break loop
 			default:
 
-				var e error
-				var v RPCRequest
+				var err error
+				var req RPCRequest
 
-				switch format {
-				default:
-					e = s.ReadJSON(&v)
-				case "JSON":
-					e = s.ReadJSON(&v)
-				case "CBOR":
-					e = s.ReadCBOR(&v)
-				case "BINC":
-					e = s.ReadBINC(&v)
-				case "PACK":
-					e = s.ReadPACK(&v)
+				switch kind {
+				case "json":
+					err = s.ReadJSON(&req)
+				case "cbor":
+					err = s.ReadCBOR(&req)
+				case "pack":
+					err = s.ReadPACK(&req)
 				}
 
-				if e != nil {
-					s.Close()
-					quit <- s.err(e)
+				if err != nil {
+					s.Close(websocket.CloseUnsupportedData)
+					quit <- s.err(err)
 					exit <- 0
 					break loop
 				}
 
-				recv <- &v
+				recv <- &req
 
 			}
 		}
@@ -89,26 +86,22 @@ func (s *Socket) rpc(format string) (chan<- *RPCResponse, <-chan *RPCRequest, ch
 			select {
 			case <-exit:
 				break loop
-			case v := <-send:
+			case res := <-send:
 
-				var e error
+				var err error
 
-				switch format {
-				default:
-					e = s.SendJSON(v)
-				case "JSON":
-					e = s.SendJSON(v)
-				case "CBOR":
-					e = s.SendCBOR(v)
-				case "BINC":
-					e = s.SendBINC(v)
-				case "PACK":
-					e = s.SendPACK(v)
+				switch kind {
+				case "json":
+					err = s.SendJSON(res)
+				case "cbor":
+					err = s.SendJSON(res)
+				case "pack":
+					err = s.SendJSON(res)
 				}
 
-				if e != nil {
-					s.Close()
-					quit <- s.err(e)
+				if err != nil {
+					s.Close(websocket.CloseUnsupportedData)
+					quit <- s.err(err)
 					exit <- 0
 					break loop
 				}
@@ -119,6 +112,10 @@ func (s *Socket) rpc(format string) (chan<- *RPCResponse, <-chan *RPCRequest, ch
 
 	return send, recv, quit
 
+}
+
+func (s *Socket) Close(code int) error {
+	return s.Send(websocket.CloseMessage, websocket.FormatCloseMessage(code, ""))
 }
 
 // Read reads a message from the socket.

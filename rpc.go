@@ -56,11 +56,11 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 
 	f.router.Add(GET, p, func(c *Context) (err error) {
 
-		if err = c.Upgrade(); err != nil {
+		if err = c.Upgrade("json", "cbor", "pack"); err != nil {
 			return
 		}
 
-		send, recv, quit := c.Socket().rpc(c.Query("format"))
+		send, recv, quit := c.Socket().rpc()
 
 		for {
 			select {
