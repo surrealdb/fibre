@@ -41,6 +41,10 @@ func Logs() fibre.MiddlewareFunc {
 				met = "WS"
 			}
 
+			if err, ok := err.(*fibre.HTTPError); ok {
+				num = err.Code()
+			}
+
 			log := c.Fibre().Logger().WithFields(map[string]interface{}{
 				"prefix": c.Fibre().Name(),
 				"ip":     ip,
