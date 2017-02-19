@@ -31,6 +31,7 @@ type RPCError struct {
 // RPCRequest represents an incoming jsonrpc request
 type RPCRequest struct {
 	ID     interface{}   `json:"id" msgpack:"id"`
+	Async  bool          `json:"async" msgpack:"async"`
 	Method string        `json:"method" msgpack:"method"`
 	Params []interface{} `json:"params" msgpack:"params"`
 }
@@ -67,8 +68,16 @@ func (f *Fibre) Rpc(p string, i interface{}) {
 			case err := <-quit:
 				return err
 			case req := <-recv:
-				if res := rpc(req, c, i); res != nil {
-					send <- res
+				if req.Async {
+					go func() {
+						if res := rpc(req, c, i); res != nil {
+							send <- res
+						}
+					}()
+				} else {
+					if res := rpc(req, c, i); res != nil {
+						send <- res
+					}
 				}
 			}
 		}
