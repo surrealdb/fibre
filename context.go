@@ -38,6 +38,7 @@ var wsupgrader = websocket.Upgrader{
 	WriteBufferSize:   4096,
 	EnableCompression: true,
 	HandshakeTimeout:  time.Second * 10,
+	Subprotocols:      []string{"default", "fibre"},
 	CheckOrigin: func(r *http.Request) bool {
 		return true
 	},
