@@ -171,6 +171,11 @@ func (s *Socket) ReadPACK(v interface{}) (err error) {
 	return codec.NewDecoder(r, &mh).Decode(v)
 }
 
+// Send sends a response to the socket.
+func (s *Socket) Send(t int, data []byte) (err error) {
+	return s.Conn.WriteMessage(t, data)
+}
+
 // SendText sends a text response with status code.
 func (s *Socket) SendText(data string) (err error) {
 	return s.Conn.WriteMessage(websocket.TextMessage, []byte(data))
