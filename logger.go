@@ -17,7 +17,7 @@ package fibre
 import (
 	"os"
 
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // Logger ...
