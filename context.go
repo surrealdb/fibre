@@ -327,7 +327,7 @@ func (c *Context) Bind(i interface{}) (err error) {
 }
 
 // IP returns the ip address belonging to this context.
-func (c *Context) IP() string {
+func (c *Context) IP() net.IP {
 
 	var i int
 	var s string
@@ -341,7 +341,7 @@ func (c *Context) IP() string {
 			s = strings.ToUpper(s)
 		}
 		if ip := c.Request().Header().Get(s); ip != "" {
-			return ip
+			return net.ParseIP(ip)
 		}
 	}
 
@@ -354,13 +354,13 @@ func (c *Context) IP() string {
 			s = strings.ToUpper(s)
 		}
 		if ip := c.Request().Header().Get(s); ip != "" {
-			return strings.Split(ip, ", ")[0]
+			return net.ParseIP(strings.Split(ip, ", ")[0])
 		}
 	}
 
 	addr := c.Request().RemoteAddr
 	addr, _, _ = net.SplitHostPort(addr)
-	return addr
+	return net.ParseIP(addr)
 
 }
 
