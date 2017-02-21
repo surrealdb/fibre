@@ -52,7 +52,7 @@ func Logs() fibre.MiddlewareFunc {
 				"size":   res.Size(),
 				"status": num,
 				"method": met,
-				"time":   time.Since(now),
+				"speed":  time.Since(now),
 			})
 
 			if id := c.Get("id"); id != nil {
