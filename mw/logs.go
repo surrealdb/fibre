@@ -47,6 +47,7 @@ func Logs() fibre.MiddlewareFunc {
 
 			log := c.Fibre().Logger().WithFields(map[string]interface{}{
 				"prefix": c.Fibre().Name(),
+				"ctx":    c,
 				"ip":     ip,
 				"url":    url,
 				"size":   res.Size(),
