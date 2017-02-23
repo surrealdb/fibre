@@ -27,34 +27,31 @@ import (
 	"github.com/abcum/fibre"
 )
 
-type zipper struct {
+var pool = sync.Pool{
+	New: func() interface{} {
+		return gzip.NewWriter(ioutil.Discard)
+	},
+}
+
+type zip struct {
 	io.Writer
 	http.ResponseWriter
 }
 
-func (w zipper) Write(b []byte) (int, error) {
-	if w.Header().Get("Content-Type") == "" {
-		w.Header().Set("Content-Type", http.DetectContentType(b))
-	}
-	return w.Writer.Write(b)
+func (z zip) Write(b []byte) (n int, err error) {
+	return z.Writer.Write(b)
 }
 
-func (w zipper) Flush() error {
-	return w.Writer.(*gzip.Writer).Flush()
+func (z zip) Flush() error {
+	return z.Writer.(*gzip.Writer).Flush()
 }
 
-func (w zipper) Hijack() (net.Conn, *bufio.ReadWriter, error) {
-	return w.ResponseWriter.(http.Hijacker).Hijack()
+func (z zip) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	return z.ResponseWriter.(http.Hijacker).Hijack()
 }
 
-func (w *zipper) CloseNotify() <-chan bool {
-	return w.ResponseWriter.(http.CloseNotifier).CloseNotify()
-}
-
-var writerPool = sync.Pool{
-	New: func() interface{} {
-		return gzip.NewWriter(ioutil.Discard)
-	},
+func (z *zip) CloseNotify() <-chan bool {
+	return z.ResponseWriter.(http.CloseNotifier).CloseNotify()
 }
 
 // Gzip defines middleware for compressing response output.
@@ -67,18 +64,31 @@ func Gzip() fibre.MiddlewareFunc {
 				return h(c)
 			}
 
+			// Set the accept-encoding header
 			c.Response().Header().Add("Vary", "Accept-Encoding")
 
+			// Check to see if the client can accept gzip encoding
 			if strings.Contains(c.Request().Header().Get("Accept-Encoding"), "gzip") {
-				w := writerPool.Get().(*gzip.Writer)
+
+				// Get a zipper
+				w := pool.Get().(*gzip.Writer)
+
+				// Reset its io.Writer
 				w.Reset(c.Response().Writer())
+
 				defer func() {
 					w.Close()
-					writerPool.Put(w)
+					pool.Put(w)
 				}()
-				gw := zipper{Writer: w, ResponseWriter: c.Response().Writer()}
+
+				// Specify the gzip encoding header
 				c.Response().Header().Set("Content-Encoding", "gzip")
-				c.Response().SetWriter(gw)
+
+				// Set the response writer to the zipper
+				c.Response().SetWriter(zip{
+					Writer: w, ResponseWriter: c.Response().Writer(),
+				})
+
 			}
 
 			if err := h(c); err != nil {
