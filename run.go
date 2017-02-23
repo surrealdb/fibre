@@ -39,6 +39,7 @@ func (f *Fibre) Run(opts HTTPOptions, files ...string) {
 			Server: &http.Server{
 				Addr:         v,
 				Handler:      f,
+				IdleTimeout:  f.itimeout,
 				ReadTimeout:  f.rtimeout,
 				WriteTimeout: f.wtimeout,
 				ErrorLog:     log.New(w, "", 0),

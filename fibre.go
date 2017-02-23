@@ -26,6 +26,7 @@ type (
 		pool         sync.Pool
 		name         string
 		wait         time.Duration
+		itimeout     time.Duration
 		rtimeout     time.Duration
 		wtimeout     time.Duration
 		logger       *Logger
@@ -136,6 +137,11 @@ func (f *Fibre) SetLogFormat(l string) {
 // SetWait sets the graceful timeout duration.
 func (f *Fibre) SetWait(wait string) {
 	f.wait, _ = time.ParseDuration(wait)
+}
+
+// SetIdleTimeout sets the max idle time for a keepalive connection.
+func (f *Fibre) SetIdleTimeout(wait string) {
+	f.itimeout, _ = time.ParseDuration(wait)
 }
 
 // SetReadTimeout sets the max duration for reading requests.
