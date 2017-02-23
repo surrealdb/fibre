@@ -193,7 +193,7 @@ func (c *Context) XML(code int, data interface{}) (err error) {
 		c.response.Write([]byte(xml.Header))
 	}
 	if data != nil {
-		xml.NewEncoder(c.response.ResponseWriter).Encode(data)
+		xml.NewEncoder(c.response).Encode(data)
 	}
 	return
 }
@@ -203,7 +203,7 @@ func (c *Context) JSON(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response.ResponseWriter, &jh).Encode(data)
+		codec.NewEncoder(c.response, &jh).Encode(data)
 	}
 	return
 }
@@ -213,7 +213,7 @@ func (c *Context) CBOR(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/cbor; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response.ResponseWriter, &ch).Encode(data)
+		codec.NewEncoder(c.response, &ch).Encode(data)
 	}
 	return
 }
@@ -223,7 +223,7 @@ func (c *Context) BINC(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/binc; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response.ResponseWriter, &bh).Encode(data)
+		codec.NewEncoder(c.response, &bh).Encode(data)
 	}
 	return
 }
@@ -233,7 +233,7 @@ func (c *Context) PACK(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/msgpack; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response.ResponseWriter, &mh).Encode(data)
+		codec.NewEncoder(c.response, &mh).Encode(data)
 	}
 	return
 }
@@ -269,7 +269,7 @@ func (c *Context) File(path string) (err error) {
 		if err != nil {
 			return NewHTTPError(404)
 		}
-		http.ServeContent(c.Response().ResponseWriter, c.Request().Request, info.Name(), info.ModTime(), file)
+		http.ServeContent(c.response, c.Request().Request, info.Name(), info.ModTime(), file)
 	}
 
 	if info.IsDir() == true {
@@ -277,7 +277,7 @@ func (c *Context) File(path string) (err error) {
 		if err != nil {
 			return NewHTTPError(404)
 		}
-		http.ServeContent(c.Response().ResponseWriter, c.Request().Request, info.Name(), info.ModTime(), file)
+		http.ServeContent(c.response, c.Request().Request, info.Name(), info.ModTime(), file)
 	}
 
 	return nil
@@ -381,8 +381,8 @@ func (c *Context) Upgrade(protocols ...string) (err error) {
 	if websocket.IsWebSocketUpgrade(c.Request().Request) {
 
 		var sck *websocket.Conn
+		res := c.response
 		req := c.request.Request
-		res := c.response.ResponseWriter
 		pro := websocket.Subprotocols(c.Request().Request)
 
 		if len(protocols) > 0 && !in(protocols, pro) {
