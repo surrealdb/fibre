@@ -91,11 +91,7 @@ func Gzip() fibre.MiddlewareFunc {
 
 			}
 
-			if err := h(c); err != nil {
-				c.Error(err)
-			}
-
-			return nil
+			return h(c)
 
 		}
 	}
