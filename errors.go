@@ -22,14 +22,23 @@ import (
 type HTTPError struct {
 	code    int
 	message string
+	fields  map[string]interface{}
 }
 
 // NewHTTPError creates a new instance of HTTPError.
 func NewHTTPError(code int, message ...string) (err *HTTPError) {
-	if len(message) > 0 {
-		return &HTTPError{code: code, message: message[0]}
+
+	err = &HTTPError{code: code}
+
+	switch len(message) {
+	case 1:
+		err.message = message[0]
+	case 0:
+		err.message = http.StatusText(code)
 	}
-	return &HTTPError{code: code, message: http.StatusText(code)}
+
+	return err
+
 }
 
 // Code returns code.
@@ -40,6 +49,34 @@ func (e *HTTPError) Code() int {
 // Error returns message.
 func (e *HTTPError) Error() string {
 	return e.message
+}
+
+// Fields returns error fields.
+func (e *HTTPError) Fields() map[string]interface{} {
+	return e.fields
+}
+
+func (e *HTTPError) WithMessage(m string) *HTTPError {
+	e.message = m
+	return e
+}
+
+func (e *HTTPError) WithField(k string, v interface{}) *HTTPError {
+	if e.fields == nil {
+		e.fields = make(map[string]interface{})
+	}
+	e.fields[k] = v
+	return e
+}
+
+func (e *HTTPError) WithFields(f map[string]interface{}) *HTTPError {
+	if e.fields == nil {
+		e.fields = make(map[string]interface{})
+	}
+	for k, v := range f {
+		e.fields[k] = v
+	}
+	return e
 }
 
 // DefaultHTTPErrorHandler invokes the default HTTP error handler.

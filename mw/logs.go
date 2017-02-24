@@ -36,6 +36,7 @@ func Logs() fibre.MiddlewareFunc {
 			now := c.Request().Start()
 			met := req.Method
 			url := req.URL().Path
+			log := c.Fibre().Logger().WithField("prefix", c.Fibre().Name())
 
 			if c.Socket() != nil {
 				met = "WS"
@@ -43,10 +44,10 @@ func Logs() fibre.MiddlewareFunc {
 
 			if err, ok := err.(*fibre.HTTPError); ok {
 				num = err.Code()
+				log = log.WithFields(err.Fields())
 			}
 
-			log := c.Fibre().Logger().WithFields(map[string]interface{}{
-				"prefix": c.Fibre().Name(),
+			log = log.WithFields(map[string]interface{}{
 				"ctx":    c,
 				"ip":     ip,
 				"url":    url,
