@@ -17,7 +17,6 @@ package mw
 import (
 	"bufio"
 	"compress/gzip"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -33,24 +32,60 @@ var pool = sync.Pool{
 	},
 }
 
-type zip struct {
-	io.Writer
+type zipper struct {
+	gzip *gzip.Writer
 	http.ResponseWriter
 }
 
-func (z zip) Write(b []byte) (n int, err error) {
-	return z.Writer.Write(b)
+func (z *zipper) Setup() {
+
+	// Get a gzip writer from the pool
+	z.gzip = pool.Get().(*gzip.Writer)
+
+	// Reset the pooled gzip writer
+	z.gzip.Reset(z.ResponseWriter)
+
+	// Remove any set length header
+	z.ResponseWriter.Header().Del("Content-Length")
+
+	// Specify the gzip encoding header
+	z.ResponseWriter.Header().Set("Content-Encoding", "gzip")
+
 }
 
-func (z zip) Flush() error {
-	return z.Writer.(*gzip.Writer).Flush()
+func (z *zipper) Close() {
+	if z.gzip != nil {
+		z.gzip.Close()
+		pool.Put(z.gzip)
+	}
 }
 
-func (z zip) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+func (z *zipper) Write(b []byte) (n int, err error) {
+	if z.gzip == nil {
+		z.Setup()
+	}
+	return z.gzip.Write(b)
+}
+
+func (z *zipper) WriteHeader(c int) {
+	if z.gzip == nil {
+		z.Setup()
+	}
+	z.ResponseWriter.WriteHeader(c)
+}
+
+func (z *zipper) Flush() {
+	if z.gzip != nil {
+		z.gzip.Flush()
+	}
+	z.ResponseWriter.(http.Flusher).Flush()
+}
+
+func (z *zipper) Hijack() (net.Conn, *bufio.ReadWriter, error) {
 	return z.ResponseWriter.(http.Hijacker).Hijack()
 }
 
-func (z *zip) CloseNotify() <-chan bool {
+func (z *zipper) CloseNotify() <-chan bool {
 	return z.ResponseWriter.(http.CloseNotifier).CloseNotify()
 }
 
@@ -70,24 +105,11 @@ func Gzip() fibre.MiddlewareFunc {
 			// Check to see if the client can accept gzip encoding
 			if strings.Contains(c.Request().Header().Get("Accept-Encoding"), "gzip") {
 
-				// Get a zipper
-				w := pool.Get().(*gzip.Writer)
+				z := &zipper{ResponseWriter: c.Response().Writer()}
 
-				// Reset its io.Writer
-				w.Reset(c.Response().Writer())
+				c.Response().SetWriter(z)
 
-				defer func() {
-					w.Close()
-					pool.Put(w)
-				}()
-
-				// Specify the gzip encoding header
-				c.Response().Header().Set("Content-Encoding", "gzip")
-
-				// Set the response writer to the zipper
-				c.Response().SetWriter(zip{
-					Writer: w, ResponseWriter: c.Response().Writer(),
-				})
+				defer z.Close()
 
 			}
 
