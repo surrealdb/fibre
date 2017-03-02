@@ -15,6 +15,7 @@
 package fibre
 
 import (
+	"context"
 	"mime"
 	"net"
 	"os"
@@ -39,6 +40,7 @@ type Context struct {
 	socket   *Socket
 	request  *Request
 	response *Response
+	ctx      context.Context
 	path     string
 	param    url.Values
 	query    url.Values
@@ -52,6 +54,20 @@ func NewContext(req *Request, res *Response, f *Fibre) *Context {
 		request:  req,
 		response: res,
 	}
+}
+
+func (c *Context) Context() context.Context {
+	if c.ctx != nil {
+		return c.ctx
+	}
+	return context.Background()
+}
+
+func (c *Context) WithContext(ctx context.Context) *Context {
+	n := new(Context)
+	*n = *c
+	n.ctx = ctx
+	return n
 }
 
 // Fibre returns the fibre instance.
