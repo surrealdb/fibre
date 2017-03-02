@@ -47,7 +47,7 @@ func Newrelic(opts ...*NewrelicOpts) fibre.MiddlewareFunc {
 				agent, _ = newrelic.NewApplication(config)
 			}
 
-			txn := agent.StartTransaction(c.Request().URL().Path, c.Response().ResponseWriter, c.Request().Request)
+			txn := agent.StartTransaction(c.Request().URL().Path, c.Response(), c.Request().Request)
 
 			defer txn.End()
 
