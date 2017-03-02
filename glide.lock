@@ -1,5 +1,5 @@
 hash: bc91a3647acf1da3d0d11ca2674efcf92ece63256e5969e2e6cc29e2624920bd
-updated: 2017-02-21T19:55:20.130853026Z
+updated: 2017-03-02T00:49:02.664681024Z
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
@@ -18,13 +18,13 @@ imports:
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/Sirupsen/logrus
-  version: c078b1e43f58d563c74cebe63c85789e76ddb627
+  version: 0208149b40d863d2c1a2f8fe5753096a9cf2cc8b
 - name: github.com/ugorji/go
   version: c88ee250d0221a57af388746f5cf03768c21d6e2
   subpackages:
   - codec
 - name: golang.org/x/sys
-  version: 075e574b89e4c2d22f2286a7e2b919519c6f3547
+  version: e4594059fe4cde2daf423055a596c2cd1e6c9adf
   subpackages:
   - unix
 - name: gopkg.in/tylerb/graceful.v1
