@@ -48,13 +48,13 @@ func Logs() fibre.MiddlewareFunc {
 			}
 
 			log = log.WithFields(map[string]interface{}{
-				"ctx":    c,
-				"ip":     ip,
-				"url":    url,
-				"size":   res.Size(),
-				"status": num,
-				"method": met,
-				"speed":  time.Since(now),
+				"ctx":     c,
+				"ip":      ip,
+				"url":     url,
+				"size":    res.Size(),
+				"status":  num,
+				"method":  met,
+				"latency": time.Since(now),
 			})
 
 			if id := c.Get("id"); id != nil {
