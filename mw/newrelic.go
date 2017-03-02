@@ -21,7 +21,7 @@ import (
 
 var agent newrelic.Application
 
-// NewrelicOpts defines options for the Info middleware.
+// NewrelicOpts defines options for the Newrelic middleware.
 type NewrelicOpts struct {
 	Name    string
 	License string
