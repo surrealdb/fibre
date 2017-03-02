@@ -19,6 +19,12 @@ import (
 	"strings"
 )
 
+var MiddlewareSkip = func(h HandlerFunc) HandlerFunc {
+	return func(c *Context) error {
+		return h(c)
+	}
+}
+
 // ----------------------------------------------------------------------------------------------------
 
 // HostIs checks if the url path matches in the request. If the path matches the middleware will be invoked.
