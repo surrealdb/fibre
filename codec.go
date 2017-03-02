@@ -33,6 +33,7 @@ func init() {
 
 	jh.Canonical = true
 	jh.InternString = true
+	jh.HTMLCharsAsIs = true
 	jh.CheckCircularRef = false
 	jh.AsSymbols = codec.AsSymbolDefault
 	jh.SliceType = reflect.TypeOf([]interface{}(nil))
