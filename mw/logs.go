@@ -74,6 +74,8 @@ func Logs() fibre.MiddlewareFunc {
 				log.Info("Completed request")
 			case num >= 200:
 				log.Info("Completed request")
+			default:
+				log.Info("Completed request")
 			}
 
 			return nil
