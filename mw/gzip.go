@@ -64,6 +64,9 @@ func (z *zipper) Write(b []byte) (n int, err error) {
 	if z.gzip == nil {
 		z.Setup()
 	}
+	if z.Header().Get("Content-Type") == "" {
+		z.Header().Set("Content-Type", http.DetectContentType(b))
+	}
 	return z.gzip.Write(b)
 }
 
