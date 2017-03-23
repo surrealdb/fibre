@@ -74,6 +74,9 @@ func (z *zipper) WriteHeader(c int) {
 	if z.gzip == nil {
 		z.Setup()
 	}
+	if c == http.StatusNoContent {
+		z.ResponseWriter.Header().Del("Content-Encoding")
+	}
 	z.ResponseWriter.WriteHeader(c)
 }
 
