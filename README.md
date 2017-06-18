@@ -2,7 +2,7 @@
 
 A simple and fast http framework for Go (Golang).
 
-[![](https://img.shields.io/circleci/token/8afe7f574bd280505a0e7b76cc56f3569f89bb62/project/abcum/fibre/master.svg?style=flat-square)](https://circleci.com/gh/abcum/fibre) [![](https://img.shields.io/badge/status-beta-ff00bb.svg?style=flat-square)](https://github.com/abcum/fibre) [![](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/abcum/fibre) [![](https://goreportcard.com/badge/github.com/abcum/fibre?style=flat-square)](https://goreportcard.com/report/github.com/abcum/fibre) [![](https://img.shields.io/coveralls/abcum/fibre/master.svg?style=flat-square)](https://coveralls.io/github/abcum/fibre?branch=master) [![](https://img.shields.io/badge/license-Apache_License_2.0-00bfff.svg?style=flat-square)](https://github.com/abcum/fibre) 
+[![](https://img.shields.io/circleci/token/591b4fdb8e3bab0849a7bf60e13d1ede6677e9de/project/abcum/fibre/master.svg?style=flat-square)](https://circleci.com/gh/abcum/fibre) [![](https://img.shields.io/badge/status-beta-ff00bb.svg?style=flat-square)](https://github.com/abcum/fibre) [![](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](https://godoc.org/github.com/abcum/fibre) [![](https://goreportcard.com/badge/github.com/abcum/fibre?style=flat-square)](https://goreportcard.com/report/github.com/abcum/fibre) [![](https://img.shields.io/coveralls/abcum/fibre/master.svg?style=flat-square)](https://coveralls.io/github/abcum/fibre?branch=master) [![](https://img.shields.io/badge/license-Apache_License_2.0-00bfff.svg?style=flat-square)](https://github.com/abcum/fibre) 
 
 #### Features
 
