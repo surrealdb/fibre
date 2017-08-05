@@ -46,6 +46,10 @@ type RPCResponse struct {
 // Rpc adds a route > handler to the router for a jsonrpc endpoint.
 func (f *Fibre) Rpc(p string, i interface{}) {
 
+	f.router.Add(OPTIONS, p, func(c *Context) (err error) {
+		return c.Code(200)
+	})
+
 	f.router.Add(POST, p, func(c *Context) (err error) {
 		req := &RPCRequest{}
 		c.Bind(req)
