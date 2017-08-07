@@ -238,9 +238,11 @@ func (f *Fibre) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	c.reset(r, w, f)
 
+	p := f.router.Find(r.Method, r.URL.Path, c)
+
+	// Catch all errors before sending any output
 	h := func(c *Context) (err error) {
-		h := f.router.Find(r.Method, r.URL.Path, c)
-		if err = h(c); err != nil {
+		if err = p(c); err != nil {
 			c.Error(err)
 		}
 		return
@@ -252,7 +254,9 @@ func (f *Fibre) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Execute chain
-	h(c)
+	if err := h(c); err != nil {
+		c.Error(err)
+	}
 
 	f.pool.Put(c)
 
