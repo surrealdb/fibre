@@ -25,9 +25,7 @@ func Logs() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) (err error) {
 
-			if err = h(c); err != nil {
-				c.Error(err)
-			}
+			err = h(c)
 
 			ip := c.IP()
 			req := c.Request()
@@ -78,7 +76,7 @@ func Logs() fibre.MiddlewareFunc {
 				log.Info("Completed request")
 			}
 
-			return nil
+			return err
 
 		}
 	}
