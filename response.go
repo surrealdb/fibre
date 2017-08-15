@@ -65,7 +65,6 @@ func (r *Response) Header() http.Header {
 // used to send error codes.
 func (r *Response) WriteHeader(code int) {
 	if r.done {
-		r.fibre.Logger().Debug("Response already committed")
 		return
 	}
 	r.status = code
