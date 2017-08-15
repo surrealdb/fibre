@@ -72,6 +72,55 @@ const (
 	CONNECT = "CONNECT"
 )
 
+const (
+	HeaderAccept              = "Accept"
+	HeaderAcceptEncoding      = "Accept-Encoding"
+	HeaderAllow               = "Allow"
+	HeaderAuthenticate        = "WWW-Authenticate"
+	HeaderAuthorization       = "Authorization"
+	HeaderContentDisposition  = "Content-Disposition"
+	HeaderContentEncoding     = "Content-Encoding"
+	HeaderContentLength       = "Content-Length"
+	HeaderContentType         = "Content-Type"
+	HeaderCookie              = "Cookie"
+	HeaderIfModifiedSince     = "If-Modified-Since"
+	HeaderLastModified        = "Last-Modified"
+	HeaderLocation            = "Location"
+	HeaderOrigin              = "Origin"
+	HeaderServer              = "Server"
+	HeaderSetCookie           = "Set-Cookie"
+	HeaderUpgrade             = "Upgrade"
+	HeaderVary                = "Vary"
+	HeaderXForwardedFor       = "X-Forwarded-For"
+	HeaderXForwardedProto     = "X-Forwarded-Proto"
+	HeaderXForwardedProtocol  = "X-Forwarded-Protocol"
+	HeaderXForwardedSsl       = "X-Forwarded-Ssl"
+	HeaderXHTTPMethodOverride = "X-HTTP-Method-Override"
+	HeaderXPoweredBy          = "X-Powered-By"
+	HeaderXRealIP             = "X-Real-IP"
+	HeaderXRequestID          = "X-Request-ID"
+	HeaderXUrlScheme          = "X-Url-Scheme"
+
+	// Access control
+	HeaderAccessControlRequestMethod    = "Access-Control-Request-Method"
+	HeaderAccessControlRequestHeaders   = "Access-Control-Request-Headers"
+	HeaderAccessControlAllowOrigin      = "Access-Control-Allow-Origin"
+	HeaderAccessControlAllowMethods     = "Access-Control-Allow-Methods"
+	HeaderAccessControlAllowHeaders     = "Access-Control-Allow-Headers"
+	HeaderAccessControlAllowCredentials = "Access-Control-Allow-Credentials"
+	HeaderAccessControlExposeHeaders    = "Access-Control-Expose-Headers"
+	HeaderAccessControlMaxAge           = "Access-Control-Max-Age"
+
+	// Security
+	HeaderContentSecurityPolicy   = "Content-Security-Policy"
+	HeaderPublicKeyPins           = "Public-Key-Pins"
+	HeaderStrictTransportSecurity = "Strict-Transport-Security"
+	HeaderXContentTypeOptions     = "X-Content-Type-Options"
+	HeaderXCSRFToken              = "X-CSRF-Token"
+	HeaderXFrameOptions           = "X-Frame-Options"
+	HeaderXXSSProtection          = "X-XSS-Protection"
+)
+
 var (
 	index = "index.html"
 
