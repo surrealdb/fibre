@@ -253,7 +253,7 @@ func (f *Fibre) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h = f.middleware[i](h)
 	}
 
-	// Execute chain
+	// Execute middleware and request chain
 	if err := h(c); err != nil {
 		c.Error(err)
 	}
