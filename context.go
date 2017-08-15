@@ -95,6 +95,26 @@ func (c *Context) Response() *Response {
 	return c.response
 }
 
+// IsTLS returns true if the request was made over TLS.
+func (c *Context) IsTLS() bool {
+	return c.Request().TLS != nil
+}
+
+// IsOrigin returns true if the request specifies an origin.
+func (c *Context) IsOrigin() bool {
+	return c.Request().Header().Get(HeaderOrigin) != ""
+}
+
+// IsSocket returns true if the request is made over WebSocket.
+func (c *Context) IsSocket() bool {
+	return c.Request().Header().Get(HeaderUpgrade) == "websocket"
+}
+
+// IsComplete returns true if the response has been closed.
+func (c *Context) IsComplete() bool {
+	return c.Response().Done()
+}
+
 // Type returns the desired response mime type.
 func (c *Context) Type() string {
 	head := c.Request().Header().Get("Content-Type")
@@ -120,6 +140,11 @@ func (c *Context) Body() []byte {
 // Path returns the registered path for the handler.
 func (c *Context) Path() string {
 	return c.path
+}
+
+// Origin returns the request origin if specified.
+func (c *Context) Origin() (v string) {
+	return c.Request().Header().Get(HeaderOrigin)
 }
 
 // Form returns form parameter by name.
