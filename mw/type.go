@@ -28,22 +28,27 @@ func Type(opts ...*TypeOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &TypeOpts{})
+			var config *TypeOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
+				return h(c)
 			}
 
 			// No config has been set
-			if len(opts[0].AllowedContent) == 0 {
+			if len(config.AllowedContent) == 0 {
 				return h(c)
 			}
 
-			// This is a websocket
-			if c.Request().Header().Get("Upgrade") == "websocket" {
-				return h(c)
-			}
-
-			if _, ok := opts[0].AllowedContent[c.Type()]; ok {
+			// Content type is within allowed types
+			if _, ok := config.AllowedContent[c.Type()]; ok {
 				return h(c)
 			}
 

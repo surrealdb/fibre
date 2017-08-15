@@ -28,17 +28,27 @@ func Size(opts ...*SizeOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
+			var config *SizeOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
 				return h(c)
 			}
 
 			// No config has been set
-			if opts[0].AllowedLength == 0 {
+			if config.AllowedLength == 0 {
 				return h(c)
 			}
 
-			if c.Request().ContentLength <= opts[0].AllowedLength {
+			// Content length is within allowed limits
+			if c.Request().ContentLength <= config.AllowedLength {
 				return h(c)
 			}
 

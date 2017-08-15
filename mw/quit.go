@@ -32,22 +32,26 @@ func Quit(opts ...*QuitOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) (err error) {
 
-			// Set defaults
-			if len(opts) == 0 {
+			var config *QuitOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
 				return h(c)
 			}
 
 			// No config has been set
-			if opts[0].Timeout == 0 {
+			if config.Timeout == 0 {
 				return h(c)
 			}
 
-			// This is a websocket
-			if c.Request().Header().Get("Upgrade") == "websocket" {
-				return h(c)
-			}
-
-			ctx, cancel := context.WithTimeout(c.Context(), opts[0].Timeout)
+			ctx, cancel := context.WithTimeout(c.Context(), config.Timeout)
 
 			c = c.WithContext(ctx)
 

@@ -32,18 +32,27 @@ func Newrelic(opts ...*NewrelicOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &NewrelicOpts{})
+			var config *NewrelicOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
+				return h(c)
 			}
 
 			// No config has been set
-			if len(opts[0].Name) == 0 || len(opts[0].License) == 0 {
+			if len(config.Name) == 0 || len(config.License) == 0 {
 				return h(c)
 			}
 
 			if agent == nil {
-				config := newrelic.NewConfig(opts[0].Name, opts[0].License)
+				config := newrelic.NewConfig(config.Name, config.License)
 				agent, _ = newrelic.NewApplication(config)
 			}
 

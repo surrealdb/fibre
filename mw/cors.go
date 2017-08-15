@@ -24,9 +24,17 @@ import (
 
 // CorsOpts defines options for the Cors middleware.
 type CorsOpts struct {
+	AllowedOrigin       string
 	AllowedMethods      []string
 	AllowedHeaders      []string
 	AccessControlMaxAge int
+}
+
+var defaultCorsOpts = &CorsOpts{
+	AllowedOrigin:       "*",
+	AllowedMethods:      []string{"GET", "PUT", "POST", "PATCH", "DELETE", "TRACE", "OPTIONS"},
+	AllowedHeaders:      []string{"Accept", "Authorization", "Content-Type", "Origin"},
+	AccessControlMaxAge: 600,
 }
 
 // Cors defines middleware for setting and checking CORS headers,
@@ -34,53 +42,61 @@ func Cors(opts ...*CorsOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &CorsOpts{})
+			var config *CorsOpts
+
+			switch len(opts) {
+			case 0:
+				config = defaultCorsOpts
+			default:
+				config = opts[0]
 			}
 
-			origin := c.Request().Header().Get("Origin")
-
-			if origin == "" {
+			// This is a socket
+			if c.IsSocket() {
 				return h(c)
 			}
 
-			// Set default values for opts.AllowedMethods
-			allowedMethods := opts[0].AllowedMethods
-			if len(allowedMethods) == 0 {
-				allowedMethods = []string{"GET", "PUT", "POST", "PATCH", "DELETE", "TRACE", "OPTIONS"}
+			// No origin is set
+			if !c.IsOrigin() {
+				return h(c)
 			}
 
-			// Set default values for opts.AllowedHeaders
-			allowedHeaders := opts[0].AllowedHeaders
-			if len(allowedHeaders) == 0 {
-				allowedHeaders = []string{"Accept", "Authorization", "Content-Type", "Origin"}
-			}
-
-			// Set default values for opts.AccessControlMaxAge
-			accessControlMaxAge := opts[0].AccessControlMaxAge
-			if accessControlMaxAge == 0 {
-				accessControlMaxAge = 3600
+			// Origin not allowed
+			if config.AllowedOrigin != "*" && config.AllowedOrigin != c.Origin() {
+				return h(c)
 			}
 
 			// Normalize AllowedMethods and make comma-separated-values
 			normedMethods := []string{}
-			for _, allowedMethod := range allowedMethods {
+			for _, allowedMethod := range config.AllowedMethods {
 				normed := http.CanonicalHeaderKey(allowedMethod)
 				normedMethods = append(normedMethods, normed)
 			}
 
 			// Normalize AllowedHeaders and make comma-separated-values
 			normedHeaders := []string{}
-			for _, allowedHeader := range allowedHeaders {
+			for _, allowedHeader := range config.AllowedHeaders {
 				normed := http.CanonicalHeaderKey(allowedHeader)
 				normedHeaders = append(normedHeaders, normed)
 			}
 
-			c.Response().Header().Set("Access-Control-Allow-Methods", strings.Join(normedMethods, ","))
-			c.Response().Header().Set("Access-Control-Allow-Headers", strings.Join(normedHeaders, ","))
-			c.Response().Header().Set("Access-Control-Max-Age", strconv.Itoa(accessControlMaxAge))
-			c.Response().Header().Set("Access-Control-Allow-Origin", origin)
+			if len(normedMethods) > 0 {
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowMethods, strings.Join(normedMethods, ","))
+			}
+
+			if len(normedHeaders) > 0 {
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowHeaders, strings.Join(normedHeaders, ","))
+			}
+
+			if config.AccessControlMaxAge > 0 {
+				c.Response().Header().Set(fibre.HeaderAccessControlMaxAge, strconv.Itoa(config.AccessControlMaxAge))
+			}
+
+			if config.AllowedOrigin != "*" {
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowOrigin, config.AllowedOrigin)
+			} else {
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowOrigin, "*")
+			}
 
 			return h(c)
 

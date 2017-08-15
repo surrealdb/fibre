@@ -21,33 +21,37 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-// SignOpts defines options for the Sign middleware.
+// SignOpts defines options for the JWt middleware.
 type SignOpts struct {
 	Key []byte
 	Fnc func(*fibre.Context, map[string]interface{}, map[string]interface{}) error
 }
 
-// Sign defines middleware for JWT authentication.
-func Sign(opts ...*SignOpts) fibre.MiddlewareFunc {
+// JWt defines middleware for JWT authentication.
+func JWt(opts ...*SignOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
+			var config *SignOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
 				return h(c)
 			}
 
 			// No config has been set
-			if len(opts[0].Key) == 0 {
+			if len(config.Key) == 0 {
 				return h(c)
 			}
 
-			// This is a websocket
-			if c.Request().Header().Get("Upgrade") == "websocket" {
-				return h(c)
-			}
-
-			head := c.Request().Header().Get("Authorization")
+			head := c.Request().Header().Get(fibre.HeaderAuthorization)
 
 			if head != "" && head[:6] == "Bearer" {
 
@@ -57,13 +61,13 @@ func Sign(opts ...*SignOpts) fibre.MiddlewareFunc {
 						return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 					}
 
-					return opts[0].Key, nil
+					return config.Key, nil
 
 				})
 
 				if err == nil && token.Valid {
-					if opts[0].Fnc != nil {
-						if err := opts[0].Fnc(c, token.Header, token.Claims.(jwt.MapClaims)); err != nil {
+					if config.Fnc != nil {
+						if err := config.Fnc(c, token.Header, token.Claims.(jwt.MapClaims)); err != nil {
 							return fibre.NewHTTPError(401)
 						}
 					}

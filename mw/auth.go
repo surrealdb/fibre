@@ -34,22 +34,26 @@ func Auth(opts ...*AuthOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &AuthOpts{})
+			var config *AuthOpts
+
+			switch len(opts) {
+			case 0:
+				return h(c)
+			default:
+				config = opts[0]
+			}
+
+			// This is a socket
+			if c.IsSocket() {
+				return h(c)
 			}
 
 			// No config has been set
-			if len(opts[0].User) == 0 && len(opts[0].Pass) == 0 {
+			if len(config.User) == 0 && len(config.Pass) == 0 {
 				return h(c)
 			}
 
-			// This is a websocket
-			if c.Request().Header().Get("Upgrade") == "websocket" {
-				return h(c)
-			}
-
-			head := c.Request().Header().Get("Authorization")
+			head := c.Request().Header().Get(fibre.HeaderAuthorization)
 
 			if head != "" && head[:5] == "Basic" {
 
@@ -59,7 +63,7 @@ func Auth(opts ...*AuthOpts) fibre.MiddlewareFunc {
 
 					cred := bytes.SplitN(base, []byte(":"), 2)
 
-					if len(cred) == 2 && bytes.Equal(cred[0], opts[0].User) && bytes.Equal(cred[1], opts[0].Pass) {
+					if len(cred) == 2 && bytes.Equal(cred[0], config.User) && bytes.Equal(cred[1], config.Pass) {
 						return h(c)
 					}
 
@@ -67,8 +71,8 @@ func Auth(opts ...*AuthOpts) fibre.MiddlewareFunc {
 
 			}
 
-			if opts[0].Realm != "" {
-				c.Response().Header().Set("WWW-Authenticate", "Basic realm="+opts[0].Realm)
+			if config.Realm != "" {
+				c.Response().Header().Set(fibre.HeaderAuthenticate, "Basic realm="+config.Realm)
 			}
 
 			return fibre.NewHTTPError(401)

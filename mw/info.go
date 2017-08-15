@@ -23,23 +23,25 @@ type InfoOpts struct {
 	PoweredBy string
 }
 
+var defaultInfoOpts = &InfoOpts{
+	PoweredBy: "Fibre",
+}
+
 // Info defines middleware for specifying the server powered-by header.
 func Info(opts ...*InfoOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &InfoOpts{})
+			var config *InfoOpts
+
+			switch len(opts) {
+			case 0:
+				config = defaultInfoOpts
+			default:
+				config = opts[0]
 			}
 
-			// Set default values for opts.PoweredBy
-			poweredBy := opts[0].PoweredBy
-			if poweredBy == "" {
-				poweredBy = "Fibre"
-			}
-
-			c.Response().Header().Set("X-Powered-By", poweredBy)
+			c.Response().Header().Set(fibre.HeaderXPoweredBy, config.PoweredBy)
 
 			return h(c)
 

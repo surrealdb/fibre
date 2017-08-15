@@ -46,10 +46,10 @@ func (z *zipper) Setup() {
 	z.gzip.Reset(z.ResponseWriter)
 
 	// Remove any set length header
-	z.ResponseWriter.Header().Del("Content-Length")
+	z.ResponseWriter.Header().Del(fibre.HeaderContentLength)
 
 	// Specify the gzip encoding header
-	z.ResponseWriter.Header().Set("Content-Encoding", "gzip")
+	z.ResponseWriter.Header().Set(fibre.HeaderContentEncoding, "gzip")
 
 }
 
@@ -64,8 +64,8 @@ func (z *zipper) Write(b []byte) (n int, err error) {
 	if z.gzip == nil {
 		z.Setup()
 	}
-	if z.Header().Get("Content-Type") == "" {
-		z.Header().Set("Content-Type", http.DetectContentType(b))
+	if z.Header().Get(fibre.HeaderContentType) == "" {
+		z.Header().Set(fibre.HeaderContentType, http.DetectContentType(b))
 	}
 	return z.gzip.Write(b)
 }
@@ -75,7 +75,7 @@ func (z *zipper) WriteHeader(c int) {
 		z.Setup()
 	}
 	if c == http.StatusNoContent {
-		z.ResponseWriter.Header().Del("Content-Encoding")
+		z.ResponseWriter.Header().Del(fibre.HeaderContentEncoding)
 	}
 	z.ResponseWriter.WriteHeader(c)
 }
@@ -100,16 +100,18 @@ func Gzip() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// This is a websocket
-			if c.Request().Header().Get("Upgrade") == "websocket" {
+			// This is a socket
+			if c.IsSocket() {
 				return h(c)
 			}
 
 			// Set the accept-encoding header
-			c.Response().Header().Add("Vary", "Accept-Encoding")
+
+			c.Response().Header().Add(fibre.HeaderVary, "Accept-Encoding")
 
 			// Check to see if the client can accept gzip encoding
-			if strings.Contains(c.Request().Header().Get("Accept-Encoding"), "gzip") {
+
+			if strings.Contains(c.Request().Header().Get(fibre.HeaderAcceptEncoding), "gzip") {
 
 				z := &zipper{ResponseWriter: c.Response().Writer()}
 

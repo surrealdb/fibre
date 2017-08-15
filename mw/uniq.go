@@ -24,25 +24,27 @@ type UniqOpts struct {
 	HeaderKey string
 }
 
+var defaultUniqOpts = &UniqOpts{
+	HeaderKey: "Request-Id",
+}
+
 // Uniq defines middleware for assigning a unique request id.
 func Uniq(opts ...*UniqOpts) fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) error {
 
-			// Set defaults
-			if len(opts) == 0 {
-				opts = append(opts, &UniqOpts{})
-			}
+			var config *UniqOpts
 
-			// Set default values for opts.HeaderKey
-			headerKey := opts[0].HeaderKey
-			if headerKey == "" {
-				headerKey = "Request-Id"
+			switch len(opts) {
+			case 0:
+				config = defaultUniqOpts
+			default:
+				config = opts[0]
 			}
 
 			id := uuid.NewV4().String()
 
-			c.Response().Header().Set(headerKey, id)
+			c.Response().Header().Set(config.HeaderKey, id)
 
 			c.Set("id", id)
 

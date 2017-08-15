@@ -23,7 +23,7 @@ func Sock() fibre.MiddlewareFunc {
 	return func(h fibre.HandlerFunc) fibre.HandlerFunc {
 		return func(c *fibre.Context) (err error) {
 
-			if c.Request().Header().Get("Upgrade") != "websocket" {
+			if !c.IsSocket() {
 				return h(c)
 			}
 
