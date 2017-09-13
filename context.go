@@ -294,6 +294,8 @@ func (c *Context) Send(code int, data interface{}) (err error) {
 		return c.BINC(code, data)
 	case "application/msgpack":
 		return c.PACK(code, data)
+	case "application/vnd.api+json":
+		return c.JSON(code, data)
 	}
 }
 
