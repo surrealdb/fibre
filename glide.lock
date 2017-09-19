@@ -1,5 +1,5 @@
-hash: 238f349138dbce555f1da70b22bc100669b8929ec7fa8990fc31fdf1de27c8f4
-updated: 2017-08-11T23:33:00.579971752+01:00
+hash: bd5d24a92000ef443fddd76a0c279971109aad4e9925659b6dbdb52fd24e1842
+updated: 2017-09-19T11:29:53.477492545+01:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
@@ -18,15 +18,20 @@ imports:
 - name: github.com/satori/go.uuid
   version: 879c5887cd475cd7864858769793b2ceb0d44feb
 - name: github.com/Sirupsen/logrus
-  version: a3f95b5c423586578a4e099b11a46c2479628cac
+  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/ugorji/go
-  version: 5efa3251c7f7d05e5d9704a69a984ec9f1386a40
+  version: 54210f4e076c57f351166f0ed60e67d3fca57a36
   subpackages:
   - codec
+- name: golang.org/x/crypto
+  version: 7d9177d70076375b9a59c8fde23d52d9c4a7ecd5
+  subpackages:
+  - ssh/terminal
 - name: golang.org/x/sys
-  version: e42485b6e20ae7d2304ec72e535b103ed350cc02
+  version: b6e1ae21643682ce023deb8d152024597b0e9bb4
   subpackages:
   - unix
+  - windows
 - name: gopkg.in/tylerb/graceful.v1
   version: 4654dfbb6ad53cb5e27f37d99b02e16c1872fbbb
 testImports: []
