@@ -14,69 +14,24 @@
 
 GO ?= CGO_ENABLED=0 go
 
-# The `make default` command cleans
-# the go build and test files and
-# then runs a build and install.
-
 .PHONY: default
 default:
 	@echo "Choose a Makefile target:"
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print "  - " $$1}}' | sort
 
-# The `make clean` command cleans
-# all object, build, and test files
-# and removes the executable file.
-
 .PHONY: clean
 clean:
 	rm -rf vendor
-	$(GO) clean -i `glide novendor`
-	find . -name '*.test' -type f -exec rm -f {} \;
-	find . -name '*.cover' -type f -exec rm -f {} \;
-
-# The `make glide` command ensures that
-# all imported dependencies are synced
-# and located within the vendor folder.
-
-.PHONY: glide
-glide:
-	glide install
-
-# The `make setup` command runs the
-# go generate command in all of the
-# project subdirectories.
+	$(GO) clean -i
+	find . -type f \( -name '*.cover' -o -name '*.test' \) -exec rm -f {} \;
 
 .PHONY: setup
 setup:
-	$(GO) generate -v `glide novendor`
-
-# The `make build` command compiles
-# the build flags, gets the project
-# dependencies, and runs a build.
-
-.PHONY: build
-build:
-	$(GO) build -v
-
-# The `make install` command compiles
-# the build flags, gets the project
-# dependencies, and runs an install.
-
-.PHONY: install
-install:
-	$(GO) install -v
-
-# The `make tests` command runs all
-# tests, found within all sub-folders
-# in the project folder.
+	glide install
 
 .PHONY: tests
 tests:
-	$(GO) test -v `glide novendor`
-
-# The `make cover` command runs all
-# tests, and produces and uploads a
-# coverage profile to coveralls.
+	$(GO) test -v ./...
 
 .PHONY: cover
 cover:
