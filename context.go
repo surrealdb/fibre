@@ -407,6 +407,13 @@ func (c *Context) IP() net.IP {
 
 }
 
+// Redirect redirects the http request to a different url.
+func (c *Context) Redirect(code int, url string) (err error) {
+	c.Response().Header().Set(HeaderLocation, url)
+	c.Response().WriteHeader(code)
+	return nil
+}
+
 // Upgrade upgrades the http request to a websocket connection.
 func (c *Context) Upgrade(protocols ...string) (err error) {
 

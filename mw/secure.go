@@ -22,6 +22,7 @@ import (
 
 // SecureOpts defines options for the Secure middleware.
 type SecureOpts struct {
+	RedirectHTTP          bool
 	XSSProtection         string
 	FrameOptions          string
 	ContentTypeOptions    string
@@ -49,6 +50,12 @@ func Secure(opts ...*SecureOpts) fibre.MiddlewareFunc {
 				config = defaultSecureOpts
 			default:
 				config = opts[0]
+			}
+
+			if config.RedirectHTTP && (!c.IsTLS() || c.Request().Header().Get(fibre.HeaderXForwardedProto) == "http") {
+				h := c.Request().Host
+				u := c.Request().RequestURI
+				return c.Redirect(301, "https://"+h+u)
 			}
 
 			// This is a socket
