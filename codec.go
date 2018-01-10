@@ -35,7 +35,6 @@ func init() {
 	jh.InternString = true
 	jh.HTMLCharsAsIs = true
 	jh.CheckCircularRef = false
-	jh.AsSymbols = codec.AsSymbolDefault
 	jh.SliceType = reflect.TypeOf([]interface{}(nil))
 	jh.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
@@ -44,7 +43,6 @@ func init() {
 	ch.Canonical = true
 	ch.InternString = true
 	ch.CheckCircularRef = false
-	ch.AsSymbols = codec.AsSymbolDefault
 	ch.SliceType = reflect.TypeOf([]interface{}(nil))
 	ch.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
@@ -53,7 +51,6 @@ func init() {
 	bh.Canonical = true
 	bh.InternString = true
 	bh.CheckCircularRef = false
-	bh.AsSymbols = codec.AsSymbolDefault
 	bh.SliceType = reflect.TypeOf([]interface{}(nil))
 	bh.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
@@ -64,7 +61,6 @@ func init() {
 	mh.RawToString = true
 	mh.InternString = true
 	mh.CheckCircularRef = false
-	mh.AsSymbols = codec.AsSymbolDefault
 	mh.SliceType = reflect.TypeOf([]interface{}(nil))
 	mh.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
