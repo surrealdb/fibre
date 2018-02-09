@@ -115,7 +115,7 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 }
 
 func (s *Socket) Close(code int) error {
-	return s.Send(websocket.CloseMessage, websocket.FormatCloseMessage(code, ""))
+	return s.Conn.Close()
 }
 
 // Read reads a message from the socket.
