@@ -15,7 +15,16 @@
 package fibre
 
 import (
+	"errors"
 	"net/http"
+)
+
+var (
+	rpcError        = errors.New("Unknown error")
+	rpcParseError   = errors.New("Parse error")
+	rpcInvalidError = errors.New("Invalid Request")
+	rpcMethodError  = errors.New("Method not found")
+	rpcParamsError  = errors.New("Invalid params")
 )
 
 // HTTPError represents an error that occurred while handling a request.

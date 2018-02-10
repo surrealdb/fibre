@@ -24,8 +24,8 @@ type RPCNull struct{}
 
 // RPCError represents a jsonrpc error
 type RPCError struct {
-	Code    int    `json:"code" msgpack:"code"`
-	Message string `json:"message" msgpack:"message"`
+	Code    int   `json:"code" msgpack:"code"`
+	Message error `json:"message" msgpack:"message"`
 }
 
 // RPCRequest represents an incoming jsonrpc request
@@ -109,12 +109,12 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 				ID: req.ID,
 				Error: &RPCError{
 					Code:    -32099,
-					Message: "Unknown error",
+					Message: rpcError,
 				},
 			}
 
 			if err, ok := r.(error); ok {
-				o.Error.Message = err.(error).Error()
+				o.Error.Message = err.(error)
 			}
 
 		}
@@ -132,7 +132,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32700,
-				Message: "Parse error",
+				Message: rpcParseError,
 			},
 		}
 	}
@@ -142,7 +142,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32600,
-				Message: "Invalid Request",
+				Message: rpcInvalidError,
 			},
 		}
 	}
@@ -152,7 +152,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32601,
-				Message: "Method not found",
+				Message: rpcMethodError,
 			},
 		}
 	}
@@ -164,7 +164,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32602,
-				Message: "Invalid params",
+				Message: rpcParamsError,
 			},
 		}
 	}
@@ -174,7 +174,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32602,
-				Message: "Invalid params",
+				Message: rpcParamsError,
 			},
 		}
 	}
@@ -194,7 +194,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 				ID: req.ID,
 				Error: &RPCError{
 					Code:    -32602,
-					Message: "Invalid params",
+					Message: rpcParamsError,
 				},
 			}
 		}
@@ -217,7 +217,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32000,
-				Message: err.(error).Error(),
+				Message: err.(error),
 			},
 		}
 	}
