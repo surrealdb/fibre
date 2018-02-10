@@ -94,9 +94,9 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 				case "json":
 					err = s.SendJSON(res)
 				case "cbor":
-					err = s.SendJSON(res)
+					err = s.SendCBOR(res)
 				case "pack":
-					err = s.SendJSON(res)
+					err = s.SendPACK(res)
 				}
 
 				if err != nil {
