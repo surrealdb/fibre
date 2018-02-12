@@ -24,8 +24,8 @@ type RPCNull struct{}
 
 // RPCError represents a jsonrpc error
 type RPCError struct {
-	Code    int   `json:"code" msgpack:"code"`
-	Message error `json:"message" msgpack:"message"`
+	Code    int    `json:"code" msgpack:"code"`
+	Message string `json:"message,omitempty" msgpack:"message,omitempty"`
 }
 
 // RPCRequest represents an incoming jsonrpc request
@@ -114,7 +114,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			}
 
 			if err, ok := r.(error); ok {
-				o.Error.Message = err.(error)
+				o.Error.Message = err.(error).Error()
 			}
 
 		}
@@ -217,7 +217,7 @@ func rpc(req *RPCRequest, c *Context, i interface{}) (o *RPCResponse) {
 			ID: req.ID,
 			Error: &RPCError{
 				Code:    -32000,
-				Message: err.(error),
+				Message: err.(error).Error(),
 			},
 		}
 	}
