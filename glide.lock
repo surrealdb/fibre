@@ -1,12 +1,12 @@
-hash: bd5d24a92000ef443fddd76a0c279971109aad4e9925659b6dbdb52fd24e1842
-updated: 2018-01-10T11:36:57.547685Z
+hash: adf9681a711bfce8a067d9c3a01ce480e4f518d4b06cf1b593bf944150480838
+updated: 2018-04-05T08:15:10.441923+01:00
 imports:
 - name: github.com/dgrijalva/jwt-go
-  version: dbeaa9332f19a944acb5736b4456cfcc02140e29
+  version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
 - name: github.com/gorilla/websocket
   version: ea4d1f681babbce9545c9c5f3d5194a789c89f5b
 - name: github.com/mitchellh/mapstructure
-  version: 06020f85339e21b2478f756a78e295255ffa4d6a
+  version: 00c29f56e2386353d58c599509e8dc3801b0d716
 - name: github.com/newrelic/go-agent
   version: f5bce3387232559bcbe6a5f8227c4bf508dac1ba
   subpackages:
@@ -17,19 +17,19 @@ imports:
   - internal/sysinfo
   - internal/utilization
 - name: github.com/satori/go.uuid
-  version: 879c5887cd475cd7864858769793b2ceb0d44feb
+  version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
 - name: github.com/Sirupsen/logrus
-  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
+  version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
 - name: github.com/ugorji/go
-  version: ccfe18359b55b97855cee1d3f74e5efbda4869dc
+  version: 9831f2c3ac1068a78f50999a30db84270f647af6
   subpackages:
   - codec
 - name: golang.org/x/crypto
-  version: 6bd909f163c83732e0b5e22a27154b1a112c3ff9
+  version: b2aa35443fbc700ab74c586ae79b81c171851023
   subpackages:
   - ssh/terminal
 - name: golang.org/x/sys
-  version: 810d7000345868fc619eb81f46307107118f4ae1
+  version: 1d206c9fa8975fb4cf00df1dc8bf3283dc24ba0e
   subpackages:
   - unix
   - windows
