@@ -1,5 +1,5 @@
-hash: adf9681a711bfce8a067d9c3a01ce480e4f518d4b06cf1b593bf944150480838
-updated: 2018-04-05T08:15:10.441923+01:00
+hash: edc94fff49b7bf9a2ed113183a8ce7f437fbc3e4395256542b446471f154215a
+updated: 2018-04-06T09:45:33.816765+01:00
 imports:
 - name: github.com/dgrijalva/jwt-go
   version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
@@ -18,7 +18,7 @@ imports:
   - internal/utilization
 - name: github.com/satori/go.uuid
   version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
-- name: github.com/Sirupsen/logrus
+- name: github.com/sirupsen/logrus
   version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
 - name: github.com/ugorji/go
   version: 9831f2c3ac1068a78f50999a30db84270f647af6
