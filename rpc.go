@@ -28,6 +28,10 @@ type RPCError struct {
 	Message string `json:"message,omitempty" msgpack:"message,omitempty"`
 }
 
+func (r *RPCError) Error() string {
+	return r.Message
+}
+
 // RPCRequest represents an incoming jsonrpc request
 type RPCRequest struct {
 	ID     interface{}   `json:"id" msgpack:"id"`
