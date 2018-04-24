@@ -25,11 +25,12 @@ type Socket struct {
 	*websocket.Conn
 	context *Context
 	fibre   *Fibre
+	notify  chan<- *RPCNotification
 }
 
 // NewSocket creates a new instance of Response.
 func NewSocket(i *websocket.Conn, c *Context, f *Fibre) *Socket {
-	return &Socket{i, c, f}
+	return &Socket{i, c, f, nil}
 }
 
 func (s *Socket) err(err error) error {
@@ -41,11 +42,14 @@ func (s *Socket) err(err error) error {
 
 func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 
+	noti := make(chan *RPCNotification)
 	send := make(chan *RPCResponse)
 	recv := make(chan *RPCRequest)
 	quit := make(chan error, 1)
 	exit := make(chan int, 1)
 	kind := s.Subprotocol()
+
+	s.notify = noti
 
 	go func() {
 	loop:
@@ -86,6 +90,26 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 			select {
 			case <-exit:
 				break loop
+			case res := <-noti:
+
+				var err error
+
+				switch kind {
+				case "json":
+					err = s.SendJSON(res)
+				case "cbor":
+					err = s.SendCBOR(res)
+				case "pack":
+					err = s.SendPACK(res)
+				}
+
+				if err != nil {
+					s.Close(websocket.CloseUnsupportedData)
+					quit <- s.err(err)
+					exit <- 0
+					break loop
+				}
+
 			case res := <-send:
 
 				var err error
@@ -116,6 +140,10 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 
 func (s *Socket) Close(code int) error {
 	return s.Conn.Close()
+}
+
+func (s *Socket) Notify(val *RPCNotification) {
+	s.notify <- val
 }
 
 // Read reads a message from the socket.
