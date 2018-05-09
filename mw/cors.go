@@ -24,17 +24,19 @@ import (
 
 // CorsOpts defines options for the Cors middleware.
 type CorsOpts struct {
-	AllowedOrigin       string
-	AllowedMethods      []string
-	AllowedHeaders      []string
-	AccessControlMaxAge int
+	AllowedOrigin                 string
+	AllowedMethods                []string
+	AllowedHeaders                []string
+	AccessControlMaxAge           int
+	AccessControlAllowCredentials bool
 }
 
 var defaultCorsOpts = &CorsOpts{
-	AllowedOrigin:       "*",
-	AllowedMethods:      []string{"GET", "PUT", "POST", "PATCH", "DELETE", "TRACE", "OPTIONS"},
-	AllowedHeaders:      []string{"Accept", "Authorization", "Content-Type", "Origin"},
-	AccessControlMaxAge: 600,
+	AllowedOrigin:                 "=",
+	AllowedMethods:                []string{"GET", "PUT", "POST", "PATCH", "DELETE", "TRACE", "OPTIONS"},
+	AllowedHeaders:                []string{"Accept", "Authorization", "Content-Type", "Origin"},
+	AccessControlMaxAge:           600,
+	AccessControlAllowCredentials: false,
 }
 
 // Cors defines middleware for setting and checking CORS headers,
@@ -62,7 +64,7 @@ func Cors(opts ...*CorsOpts) fibre.MiddlewareFunc {
 			}
 
 			// Origin not allowed
-			if config.AllowedOrigin != "*" && config.AllowedOrigin != c.Origin() {
+			if config.AllowedOrigin != "*" && config.AllowedOrigin != "=" && config.AllowedOrigin != c.Origin() {
 				return h(c)
 			}
 
@@ -92,10 +94,17 @@ func Cors(opts ...*CorsOpts) fibre.MiddlewareFunc {
 				c.Response().Header().Set(fibre.HeaderAccessControlMaxAge, strconv.Itoa(config.AccessControlMaxAge))
 			}
 
-			if config.AllowedOrigin != "*" {
+			switch config.AllowedOrigin {
+			default:
 				c.Response().Header().Set(fibre.HeaderAccessControlAllowOrigin, config.AllowedOrigin)
-			} else {
+			case "=":
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowOrigin, c.Origin())
+			case "*":
 				c.Response().Header().Set(fibre.HeaderAccessControlAllowOrigin, "*")
+			}
+
+			if config.AccessControlAllowCredentials {
+				c.Response().Header().Set(fibre.HeaderAccessControlAllowCredentials, "true")
 			}
 
 			return h(c)
