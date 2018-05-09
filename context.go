@@ -439,7 +439,7 @@ func (c *Context) Upgrade(protocols ...string) (err error) {
 			return NewHTTPError(415, "Unsupported Media Type")
 		}
 
-		if sck, err = wes.Upgrade(res, req, nil); err != nil {
+		if sck, err = wes.Upgrade(res, req, res.Header()); err != nil {
 			return NewHTTPError(426, "Upgrade required")
 		}
 
