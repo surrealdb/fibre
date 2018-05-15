@@ -15,10 +15,14 @@
 package fibre
 
 import (
+	"time"
+
 	"encoding/xml"
 	"github.com/gorilla/websocket"
 	"github.com/ugorji/go/codec"
 )
+
+var ping = []byte(nil)
 
 // Socket wraps an websocket.Conn
 type Socket struct {
@@ -42,6 +46,10 @@ func (s *Socket) err(err error) error {
 
 func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 
+	s.SetPongHandler(func(msg string) error {
+		return nil
+	})
+
 	noti := make(chan *RPCNotification)
 	send := make(chan *RPCResponse)
 	recv := make(chan *RPCRequest)
@@ -50,6 +58,31 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 	kind := s.Subprotocol()
 
 	s.notify = noti
+
+	go func() {
+	loop:
+		for {
+			select {
+			case <-exit:
+				break loop
+			case <-time.After(5 * time.Second):
+
+				var err error
+
+				var dead = time.Now().Add(5 * time.Second)
+
+				err = s.WriteControl(websocket.PingMessage, ping, dead)
+
+				if err != nil {
+					s.Close(websocket.CloseNoStatusReceived)
+					quit <- s.err(err)
+					exit <- 0
+					break loop
+				}
+
+			}
+		}
+	}()
 
 	go func() {
 	loop:
