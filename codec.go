@@ -23,13 +23,12 @@ import (
 var (
 	jh codec.JsonHandle
 	ch codec.CborHandle
-	bh codec.BincHandle
 	mh codec.MsgpackHandle
 )
 
 func init() {
 
-	// JSONHandle
+	// JsonHandle
 
 	jh.Canonical = true
 	jh.InternString = true
@@ -38,7 +37,7 @@ func init() {
 	jh.SliceType = reflect.TypeOf([]interface{}(nil))
 	jh.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
-	// CBORHandle
+	// CborHandle
 
 	ch.Canonical = true
 	ch.InternString = true
@@ -46,15 +45,7 @@ func init() {
 	ch.SliceType = reflect.TypeOf([]interface{}(nil))
 	ch.MapType = reflect.TypeOf(map[string]interface{}(nil))
 
-	// BINCHandle
-
-	bh.Canonical = true
-	bh.InternString = true
-	bh.CheckCircularRef = false
-	bh.SliceType = reflect.TypeOf([]interface{}(nil))
-	bh.MapType = reflect.TypeOf(map[string]interface{}(nil))
-
-	// PACKHandle
+	// MsgpackHandle
 
 	mh.WriteExt = true
 	mh.Canonical = true

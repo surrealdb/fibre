@@ -15,8 +15,8 @@ A simple and fast http framework for Go (Golang).
 - Build APIs with JSONRpc methodologies
 - Centralized and customisable error logging
 - Works seamlessly with Golang's standard HTTP server
-- Automatic data binding for Form, XML, JSON, CBOR, BINC, MsgPack
-- Automatic response type detection for XML, JSON, CBOR, BINC, MsgPack
+- Automatic data binding for Form, XML, JSON, CBOR, MsgPack
+- Automatic response type detection for XML, JSON, CBOR, MsgPack
 
 #### Installation
 

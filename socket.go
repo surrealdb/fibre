@@ -211,15 +211,6 @@ func (s *Socket) ReadCBOR(v interface{}) (err error) {
 	return codec.NewDecoder(r, &ch).Decode(v)
 }
 
-// ReadBINC reads a binc message from the socket.
-func (s *Socket) ReadBINC(v interface{}) (err error) {
-	_, r, err := s.NextReader()
-	if err != nil {
-		return err
-	}
-	return codec.NewDecoder(r, &bh).Decode(v)
-}
-
 // ReadPACK reads a msgpack message from the socket.
 func (s *Socket) ReadPACK(v interface{}) (err error) {
 	_, r, err := s.NextReader()
@@ -271,18 +262,6 @@ func (s *Socket) SendCBOR(data interface{}) (err error) {
 	}
 	if data != nil {
 		codec.NewEncoder(w, &ch).Encode(data)
-	}
-	return w.Close()
-}
-
-// SendBINC sends a binc response with status code.
-func (s *Socket) SendBINC(data interface{}) (err error) {
-	w, err := s.NextWriter(websocket.BinaryMessage)
-	if err != nil {
-		return err
-	}
-	if data != nil {
-		codec.NewEncoder(w, &bh).Encode(data)
 	}
 	return w.Close()
 }

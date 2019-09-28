@@ -259,16 +259,6 @@ func (c *Context) CBOR(code int, data interface{}) (err error) {
 	return
 }
 
-// BINC sends a binc response with status code.
-func (c *Context) BINC(code int, data interface{}) (err error) {
-	c.response.Header().Set("Content-Type", "application/binc; charset=utf-8")
-	c.response.WriteHeader(code)
-	if data != nil {
-		codec.NewEncoder(c.response, &bh).Encode(data)
-	}
-	return
-}
-
 // PACK sends a msgpack response with status code.
 func (c *Context) PACK(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/msgpack; charset=utf-8")
@@ -290,8 +280,6 @@ func (c *Context) Send(code int, data interface{}) (err error) {
 		return c.JSON(code, data)
 	case "application/cbor":
 		return c.CBOR(code, data)
-	case "application/binc":
-		return c.BINC(code, data)
 	case "application/msgpack":
 		return c.PACK(code, data)
 	case "application/vnd.api+json":
@@ -340,10 +328,6 @@ func (c *Context) Bind(i interface{}) (err error) {
 		}
 	case "application/cbor":
 		if err = codec.NewDecoder(c.Request().Body, &ch).Decode(i); err != nil {
-			err = NewHTTPError(400, err.Error())
-		}
-	case "application/binc":
-		if err = codec.NewDecoder(c.Request().Body, &bh).Decode(i); err != nil {
 			err = NewHTTPError(400, err.Error())
 		}
 	case "application/msgpack":
