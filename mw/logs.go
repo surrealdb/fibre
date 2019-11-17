@@ -47,6 +47,7 @@ func Logs() fibre.MiddlewareFunc {
 
 			log = log.WithFields(map[string]interface{}{
 				"ctx":     c,
+				"id":      c.Uniq(),
 				"ip":      ip,
 				"url":     url,
 				"size":    res.Size(),
@@ -54,10 +55,6 @@ func Logs() fibre.MiddlewareFunc {
 				"method":  met,
 				"latency": time.Since(now),
 			})
-
-			if id := c.Get("id"); id != nil {
-				log = log.WithField("id", id)
-			}
 
 			if err != nil {
 				log = log.WithError(err)

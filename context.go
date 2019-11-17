@@ -31,6 +31,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/mitchellh/mapstructure"
+	"github.com/segmentio/ksuid"
 	"github.com/ugorji/go/codec"
 )
 
@@ -41,6 +42,7 @@ type Context struct {
 	request  *Request
 	response *Response
 	ctx      context.Context
+	uniq     string
 	path     string
 	param    url.Values
 	query    url.Values
@@ -73,6 +75,10 @@ func (c *Context) WithContext(ctx context.Context) *Context {
 // Fibre returns the fibre instance.
 func (c *Context) Fibre() *Fibre {
 	return c.fibre
+}
+
+func (c *Context) Uniq() string {
+	return c.uniq
 }
 
 // Error invokes the registered HTTP error handler. Generally used by middleware.
@@ -441,6 +447,9 @@ func (c *Context) reset(r *http.Request, w http.ResponseWriter, f *Fibre) {
 
 	// Set the fibre instance
 	c.fibre = f
+
+	// Set an id for this connection
+	c.uniq = ksuid.New().String()
 
 	// Reset the query and store vars
 	c.param = nil

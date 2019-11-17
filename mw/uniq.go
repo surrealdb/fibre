@@ -16,7 +16,6 @@ package mw
 
 import (
 	"github.com/abcum/fibre"
-	"github.com/satori/go.uuid"
 )
 
 // UniqOpts defines options for the Uniq middleware.
@@ -42,11 +41,7 @@ func Uniq(opts ...*UniqOpts) fibre.MiddlewareFunc {
 				config = opts[0]
 			}
 
-			id := uuid.NewV4().String()
-
-			c.Response().Header().Set(config.HeaderKey, id)
-
-			c.Set("id", id)
+			c.Response().Header().Set(config.HeaderKey, c.Uniq())
 
 			return h(c)
 
