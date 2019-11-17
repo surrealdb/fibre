@@ -35,9 +35,6 @@ type (
 		errorHandler HTTPErrorHandler
 	}
 
-	// HTTPOptions represents server config options
-	HTTPOptions interface{}
-
 	// HTTPErrorHandler is a centralized HTTP error handler.
 	HTTPErrorHandler func(error, *Context)
 
@@ -181,11 +178,6 @@ func (f *Fibre) SetLogLevel(l string) {
 // SetLogFormat sets the logger log format.
 func (f *Fibre) SetLogFormat(l string) {
 	f.Logger().SetFormat(l)
-}
-
-// SetWait sets the graceful timeout duration.
-func (f *Fibre) SetWait(wait string) {
-	f.wait, _ = time.ParseDuration(wait)
 }
 
 // SetIdleTimeout sets the max idle time for a keepalive connection.

@@ -17,51 +17,34 @@
 package fibre
 
 import (
-	"log"
 	"net/http"
 
-	"gopkg.in/tylerb/graceful.v1"
+	"github.com/ory/graceful"
 )
 
 // Run runs the server and handles http requests.
-func (f *Fibre) Run(opts HTTPOptions, files ...string) {
+func (f *Fibre) Run(a string, files ...string) {
 
 	var err error
-	var s *graceful.Server
 
-	w := f.logger.Writer()
-	defer w.Close()
-
-	switch v := opts.(type) {
-	case string:
-		s = &graceful.Server{
-			Timeout: f.wait,
-			Server: &http.Server{
-				Addr:         v,
-				Handler:      f,
-				IdleTimeout:  f.itimeout,
-				ReadTimeout:  f.rtimeout,
-				WriteTimeout: f.wtimeout,
-				ErrorLog:     log.New(w, "", 0),
-			},
-		}
-	case *http.Server:
-		s = &graceful.Server{
-			Timeout: f.wait,
-			Server:  v,
-		}
-		s.Server.Handler = f
-	case *graceful.Server:
-		s = v
-		s.Server.Handler = f
-	}
+	s := graceful.WithDefaults(&http.Server{
+		Addr:         a,
+		Handler:      f,
+		IdleTimeout:  f.itimeout,
+		ReadTimeout:  f.rtimeout,
+		WriteTimeout: f.wtimeout,
+	})
 
 	if len(files) != 2 {
-		err = s.ListenAndServe()
+		err = graceful.Graceful(func() error {
+			return s.ListenAndServe()
+		}, s.Shutdown)
 	}
 
 	if len(files) == 2 {
-		err = s.ListenAndServeTLS(files[0], files[1])
+		err = graceful.Graceful(func() error {
+			return s.ListenAndServeTLS(files[0], files[1])
+		}, s.Shutdown)
 	}
 
 	if err != nil {
