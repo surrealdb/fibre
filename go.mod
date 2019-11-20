@@ -10,5 +10,5 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/segmentio/ksuid v1.0.2
 	github.com/sirupsen/logrus v1.4.2
-	github.com/ugorji/go/codec v1.1.7
+	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8
 )
