@@ -17,6 +17,7 @@
 package fibre
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/ory/graceful"
@@ -27,12 +28,16 @@ func (f *Fibre) Run(a string, files ...string) {
 
 	var err error
 
+	w := f.logger.Writer()
+	defer w.Close()
+
 	s := graceful.WithDefaults(&http.Server{
 		Addr:         a,
 		Handler:      f,
 		IdleTimeout:  f.itimeout,
 		ReadTimeout:  f.rtimeout,
 		WriteTimeout: f.wtimeout,
+		ErrorLog:     log.New(w, "", 0),
 	})
 
 	if len(files) != 2 {
