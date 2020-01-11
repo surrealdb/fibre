@@ -176,7 +176,9 @@ func (s *Socket) Close(code int) error {
 }
 
 func (s *Socket) Notify(val *RPCNotification) {
-	s.notify <- val
+	if s.notify != nil {
+		s.notify <- val
+	}
 }
 
 // Read reads a message from the socket.
