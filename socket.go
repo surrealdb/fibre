@@ -239,7 +239,9 @@ func (s *Socket) SendXML(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		xml.NewEncoder(w).Encode(data)
+		if err = xml.NewEncoder(w).Encode(data); err != nil {
+			return err
+		}
 	}
 	return w.Close()
 }
@@ -251,7 +253,9 @@ func (s *Socket) SendJSON(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		codec.NewEncoder(w, &jh).Encode(data)
+		if err = codec.NewEncoder(w, &jh).Encode(data); err != nil {
+			return err
+		}
 	}
 	return w.Close()
 }
@@ -263,7 +267,9 @@ func (s *Socket) SendCBOR(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		codec.NewEncoder(w, &ch).Encode(data)
+		if err = codec.NewEncoder(w, &ch).Encode(data); err != nil {
+			return err
+		}
 	}
 	return w.Close()
 }
@@ -275,7 +281,9 @@ func (s *Socket) SendPACK(data interface{}) (err error) {
 		return err
 	}
 	if data != nil {
-		codec.NewEncoder(w, &mh).Encode(data)
+		if err = codec.NewEncoder(w, &mh).Encode(data); err != nil {
+			return err
+		}
 	}
 	return w.Close()
 }
