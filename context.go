@@ -240,7 +240,7 @@ func (c *Context) XML(code int, data interface{}) (err error) {
 		c.response.Write([]byte(xml.Header))
 	}
 	if data != nil {
-		xml.NewEncoder(c.response).Encode(data)
+		return xml.NewEncoder(c.response).Encode(data)
 	}
 	return
 }
@@ -250,7 +250,7 @@ func (c *Context) JSON(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/json; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response, &jh).Encode(data)
+		return codec.NewEncoder(c.response, &jh).Encode(data)
 	}
 	return
 }
@@ -260,7 +260,7 @@ func (c *Context) CBOR(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/cbor; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response, &ch).Encode(data)
+		return codec.NewEncoder(c.response, &ch).Encode(data)
 	}
 	return
 }
@@ -270,7 +270,7 @@ func (c *Context) PACK(code int, data interface{}) (err error) {
 	c.response.Header().Set("Content-Type", "application/msgpack; charset=utf-8")
 	c.response.WriteHeader(code)
 	if data != nil {
-		codec.NewEncoder(c.response, &mh).Encode(data)
+		return codec.NewEncoder(c.response, &mh).Encode(data)
 	}
 	return
 }
