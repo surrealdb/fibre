@@ -65,7 +65,7 @@ func (s *Socket) rpc() (chan<- *RPCResponse, <-chan *RPCRequest, chan error) {
 			select {
 			case <-exit:
 				break loop
-			case <-time.After(1 * time.Second):
+			case <-time.After(25 * time.Second):
 
 				var err error
 
