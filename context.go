@@ -410,7 +410,7 @@ func (c *Context) Upgrade(protocols ...string) (err error) {
 	wes := websocket.Upgrader{
 		ReadBufferSize:    4096,
 		WriteBufferSize:   4096,
-		EnableCompression: true,
+		EnableCompression: false,
 		Subprotocols:      protocols,
 		HandshakeTimeout:  time.Second * 10,
 		CheckOrigin: func(r *http.Request) bool {
