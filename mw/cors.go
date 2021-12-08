@@ -19,7 +19,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // CorsOpts defines options for the Cors middleware.

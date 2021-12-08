@@ -19,7 +19,7 @@ import (
 
 	"encoding/base64"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // AuthOpts defines options for the Auth middleware.

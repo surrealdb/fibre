@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"runtime"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // Fail defines middleware for recovering from panics,

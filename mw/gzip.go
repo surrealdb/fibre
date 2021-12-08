@@ -23,7 +23,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 var pool = sync.Pool{

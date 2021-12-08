@@ -17,7 +17,7 @@ package mw
 import (
 	"fmt"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // SecureOpts defines options for the Secure middleware.

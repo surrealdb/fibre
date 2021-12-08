@@ -15,7 +15,7 @@
 package mw
 
 import (
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // InfoOpts defines options for the Info middleware.

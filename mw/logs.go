@@ -17,7 +17,7 @@ package mw
 import (
 	"time"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // Logs defines middleware for logging requests and responses.

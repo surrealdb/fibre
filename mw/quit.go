@@ -19,7 +19,7 @@ import (
 
 	"context"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // QuitOpts defines options for the Sign middleware.

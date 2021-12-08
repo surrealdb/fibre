@@ -17,7 +17,7 @@ package mw
 import (
 	"fmt"
 
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 	"github.com/dgrijalva/jwt-go"
 )
 

@@ -15,7 +15,7 @@
 package mw
 
 import (
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // UniqOpts defines options for the Uniq middleware.

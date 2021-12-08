@@ -15,7 +15,7 @@
 package mw
 
 import (
-	"github.com/abcum/fibre"
+	"github.com/surrealdb/fibre"
 )
 
 // SizeOpts defines options for the Head middleware.
