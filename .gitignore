@@ -27,13 +27,3 @@ Temporary Items
 
 *.test
 *.cover
-
-# -----------------------------------
-# Folders
-# -----------------------------------
-
-app/
-dev/
-vendor/
-node_modules/
-bower_components/
